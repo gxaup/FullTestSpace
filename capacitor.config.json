@@ -1,0 +1,10 @@
+{
+  "appId": "com.topview.logger",
+  "appName": "Topview Logger",
+  "webDir": "dist",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
+}

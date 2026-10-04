@@ -1,0 +1,619 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head><title>
+
+</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link href="Styles/PopupModal.css" rel="stylesheet" type="text/css" /><link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" /><link href="Styles/themes/base/jquery.ui.all.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" /><link href="Styles/Site.css?v=1" rel="stylesheet" type="text/css" /><link href="Styles/jquery-ui-1.8.10.custom.css?v=1" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" /><link href="Styles/Site-Custom.css?v=1>" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="Styles/select2/select2.min.css" /><link href="/Styles/FontAwesome/css/all.min.css" rel="stylesheet" />
+    <link href="/WebResource.axd?d=hI1j-3Jbw7QB65_Aew9Xrh4SxqOafzFI_d2vMY0aUbqG9uAR1cGgWTfC1u0Sx5T0bkF9HfiR-J5bDGJaR07407UYJxGeCO2Xllb7CYb4I5BRhwFm-dVCbriR9MAKY8DQHsMa2nvX1rTtLmvfrxJYqA2&amp;t=637895109516008101" type="text/css" rel="stylesheet" /></head>
+<body>
+    <form method="post" action="./Reservations.aspx" id="ctl01">
+<input type="hidden" name="smBack_HiddenField" id="smBack_HiddenField" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTExNzg0NjA2MjkPZBYCZg9kFgICBA9kFgICAw9kFgQCAQ9kFhICCQ8QZGQWAGQCDw8QZGQWAWZkAhsPEGRkFgFmZAIdDxBkZBYBZmQCHw8QZGQWAWZkAiEPEGRkFgFmZAIjDxBkZBYBZmQCJQ8QZGQWAWZkAi8PEGRkFgFmZAIEDzwrABECARAWABYAFgAMFCsAAGQYAgUgY3RsMDAkTWFpbkNvbnRlbnQkZ3ZSZXNlcnZhdGlvbnMPZ2QFFmN0bDAwJE1haW5Db250ZW50JHZ3UE0PD2RmZJM3QuH63oQv8tImd4wjkHUWzpH5E8q0q+tLskPcLrVN" />
+
+
+<script src="/ScriptResource.axd?d=pukcxOVm8AIEjwvoVeT6nYG__gMxbzVHfS88uvFd46bBupzRnqD9kCa44AfLcqDTFOEqkxtH6UwoHP_9cG6GixxSFTuyW0FB7dQ3C3j_Tjw45cPC-6b_ZnnidCXLfncLgopOIpfqy-9-4T3qDtyKsA2&amp;t=7e969891" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=sN_M8Y9tjH7k6-wI_4p87dy7-TE2ubn9v0N0XW9HXmaQhy-S1vseESMCa9LcFwyEoWmxQHYy0xjZw_srElXRkA-C1E5rFA9EBv6GrJTc5uESiCIzG4LY5iT6rvsJWvKNq9Qec1lXI0SxEGBDgNzWpA2&amp;t=ffffffffec54f2d7" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+<script src="Scripts/jquery-ui-1.8.24.min.js" type="text/javascript"></script>
+<script src="Scripts/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
+<script src="Scripts/jquery.validate.1.19.2.min.js" type="text/javascript"></script>
+<script src="Scripts/jquery.validate.unobtrusive.3.2.11.min.js" type="text/javascript"></script>
+<script src="Scripts/common/common.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" type="text/javascript"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="Scripts/select2/select2.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js" type="text/javascript"></script>
+<script src="/Scripts/MultiSelect/custom.js" type="text/javascript"></script>
+<script src="/Reservations.aspx?_TSM_HiddenField_=smBack_HiddenField&amp;_TSM_CombinedScripts_=%3b%3bAjaxControlToolkit%2c+Version%3d3.5.40412.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d28f01b0e84b6d53e%3aen-US%3a1547e793-5b7e-48fe-8490-03a375b13a33%3a475a4ef5%3aaddc6819%3a5546a2b%3ad2e10b12%3aeffe2a26%3a37e2e5c9%3a5a682656%3ac7029a2%3ae9e598a9%3a1d3ed089%3a497ef277%3aa43b07eb%3a751cdd15%3adfad98a5%3a3cf12cf1" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="5E027095" />
+<input type="hidden" name="__PREVIOUSPAGE" id="__PREVIOUSPAGE" value="C3S8lR1tI_ZnpS7XD7fNaRTXn5I_y9rW2I2h5xEPYr4cQcm86DDZSzyy1xpck5gi_uFPhjAaC0K1-iT2bfRjYmLNIcXyuoDTbQYCBJf81a41" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAPYBrm42Ecmb2ap6+0A+1FNcIHfAmp6+tfsernnSOJlqEEUnqOYsnboKKVP1e+jrJ89MeTSTFVsh7zPvxJ7GkSbZQsTORj+TNYWZJVGfwkP34Pu1Xxex+6h+VPMAUkY8L8ZNrZB/u6rA75wTDRD2aJMH6AJORJijNohY+YwM59l3Mf10YL4nKbQEgwbkgkdCRKzXWgxsTEiMEjhH4nPScAC3L4b4UOltWerD6XnEotlVxgqhfDhrtuVEWPl8saqhpvpcplefsX/2bLiv39BFqKz6kdMDAfL+l1dZzmKy9fbcP5H68ieTo2ltOwg2TrTCILbqGxAQxyKCE4DFil3NZ2MhQG0CNWhXVZTQXib9SZLi3kHVTWjvZ2qWkUvzwvlBtJ09X1RZQfwz/aXulR1FwvqjlEyu0aZTxzW9DBQ3iNs/Dy1Ky/igDpkhZNQQs1HgJ/mJIOyWxPt06bqN7nkZW+9o8jiK1b0/nsc/0pDPRmsqO/yRn1mkDD+Z4DLzh0dPkUxF2ZQI2mhLZDfNke5iupMgHF3N8E0NREcw8ekCI9kib/02JyMDyEoi3b2IGDeXK5/JLv9PySQrFRs5Jy+D4w90j1JQcEUEBOyeCEEvOjwEMaNLLqc4hUmPfbOaL4io2EvF3QplPsv3nTF1EjpLhaaHLB7QMNWzfbH0r3Me228d42y7lO0DTrJpnH+H1Jmc2/AQ63proQKs1ZB+kSz3m/0t99/2HWwsmdFXB99SDbqAqqtdvX9CBTuy93ljy+Wckwd3eYsurcjOagCC19KgjdY7+KPNFvWRcaJknTnwHQrlOCtePzfDoYitZbZzqMM6llnxdpSRX4QkrEci/IagnEtzUMOwvjzobCu29pi8opvFmUsiDqcVCdY7DB0AN/+4SdVklHLgKtIZ1ZCuYVLKN9t4ne5AaslN/j9pFFBYKshkKGFQj5eYiR9Tmm292DCCIfhTuYsi18QCBW0c+jJu4FUEu+lpy4tP1qu1JZZzDbQQG3DQinxUJzWX90tqRWRR8KDZyG+Pm7ty3DkK96/uA7RTINivfoKJJTP/YuA2tuRJtaN8+6gqez5gu6qEJ8JkOELe89kSm/ihjTgDiVBJKNpF6KCK69/wqwsEhIpfsZZALbp2l1M8hsDCkJi2CA6EI+hN8yWXinnmhsKEzQpydhXbJ7v6sJbew4v1v/Tfh4mMZiAaIKiEw9sEyBjIwGGShhtferMJCmEEUDfVujI5mO7ureg5IyB8I8HsRovZhRcXB9HaeRmF1CwXNCmz+M5v32y4MM+vJkYpEcDfXDbZC9GsqJwWFHggjqubYl6HZbtU96wMFaAPbw1SfzZzdhZ3qLEU6iX7J7fNWA2EoOI6UZuD9N4JwS0oCgp+8IEwpBLmX0FTJx31nmbJjdnIlb/1Li3HAjgkJyCFiCbSNwAx1PnnBy/y9KZo3NE3WJ/jBHp362AgsEz4thAbvqf03JUC7S3VK4+iSklWMvcnsdAzwTpNqhnRt/uHo/UCFdTxyPBQSau0UVMu6Ng9F8Xl7+IZLPkUhTLhjVLxSNLtSmegoAybcaUYTZoYOt+gUrvuDT5+d7js7IdkvBzMhP1csBsWfNYp5a6SlV+bjDz0hShBLr0hEaDmJPpbu2i/KvLk4701hGx1MtW+kmyWkav9Iw5RXBlI8uonz0YFZjRibUlpAIWbh0HY6DitTlhOD0KENdk3zutGlLkPpv1KqpHi9svdklqbbSCLdRH1Pna6ey49Z2tMqTPyYx2+iT88xzBNnBM0YE48QnLSTouu0zf7W33qzsQLhgQbroGTvTkzWmMjj2+9ihWaACEpXIs0saqhPCTpfOq5FhoSWT4qSME/IBo4MWKacM8wFpTde7xm+9vB//M1dIagQf3DlReHX2rArfgC0jUxa29DHEkEkenivukTAYRWZHxJ4gSY1dlvFvxIX3ZbdmKEJAjASkGUwEpdymK6rhMdSoVqXoxs89xMj2ykPh7QqwjgxSxwkZOy+1DlQLQH8EkikB2DHIXKtMgA+jUN+dlY+2sBmdDnhFzWIIDr0SBv0wsvu2so3xJrLXKPG8HZ7Y7scmZozbbvpI4c6qxf4m0JlXTbITsax2WqyVNKMfYF3ymJa0oQ1t2KRdNk3d0lLcOSY8rQQLdohrBYFNgAgXcn0N8cvsneG2NbKHO312ODFWRGHaTcUTGuKMvtyIlTpel2YSJrIT3Ts9jTd+Dw5/iHnKxW0GMD6xm/Ps/UBGBEGOAdWL0FF1+QPuMXZN/G972P3Z+/lIw3TAarrmOUhhgIMFsKgaaQgG/QpIUMgNbLi6vzsiyDe/rUisTv+sRL0b4y6RNfIh/dYisFfClqh3Y/QkEqTv8dFsW8dSPA6ZV0QHwMGHrHaOOwqTzEpGMpKnifN/bs7GIS2iGmBZsR2q8AGb5rQp51nJKONzq1MhB9rOt6yVMSuSsY1UUOw1QP/2r0FPbl2H5U/PpmUsCGbgMepoh6NJercN9IeuZ1aq4TW6FxpMsfSpJMC0lZaiRFxVE1Ma6i8jO+U0nnMSRKwC8Aqhj2qZv+cOWKenTUivJlpDyBAkLsPXypfRz7lOT8fJNqYxn2TvlSSgBso8rgsefCrIcYfV5ZyjLFmAotiEEMtScU/09OusQ6Hv1DGWlx8pFg/QIklIDLuznvWgFFTgkxjlFZ1NgQLJcYf+x7Ftn/hT4plyIIvq9lU2vRjBH6RXE97c5gTTmVXrEhdTFdpnZEjcBjpBaYwcMvSZuwHYq20ZwL7cwos9ityhZC9gI6N75XVU0TWR2nwCo3B8qOsBLlA5pIZjJfmPSRAmd2cHzg7uhP0r575SOLUOWa2sAvlT7ejY+OQ33z9xsnJH6oZEEmkvMV4qkcME/eXVenyQPaeqdtOjkMUxTHtbQou3V1uTK4d8gln6t6o5+adG//29uCY1QBYiU7hHfcVbtbBPFwMyjHggDmvc9iPEBoZyyUH+6KdL7pFM0BBEI/W+MOBkBk+zirnydIZlY2vklHxCj/No85iRyNNIA8K/q2IgeuXRxMqeNvp0joaG2asBzWVBbhD1CQoxvVle/xytZbG3RFPEssScXYjSZZ5B2eC+H0uggVEQk6JTLlQS7/Y36odIABGG6zbdmTUsYrEB1YjtyzwIl+0h/qFhRbGWPCIqzDyxUXeZD1I+yHVWvEXLGG3IETO64zU1G/q6vqjFRxS+51LhmNjz2/IxkX2BKIahVESqEGqw9LX0rwMTyTCpeSwaROuu64Onaf3JuyRYrJqf2PCtxA+4C4IyPWl2L0g4uh7At8O3rjYzFHEhsaruK9N8T9TUoVke8OaZEdqRufysNAA9FF1jhIDG/prr6PB6ISrUdtnblg2CB6us6yZWYanSZ5AwXbRvZDOrlvg9ZsReLWm4Wz1lZGXhT/ZChYjaO7uGeK+qxQ31qZp3SB2N7UuQ7t5yMObZgj8W1ONHvOpuquTpbrpGPTFXH7U9l08MgmiAMEUn4+5I5fsWCFrcGkImrXwHC0RH9qHO4it7Gs96KgCPhuJTR4eZ7PaW0TYUHWinHI5Qku1K9zpLUdZNSylUkNL+B8oap6CqI+ghzhSX2kIUjdac1VGQkEEAGv/qmav1ti8dgN6Clj09az92XQjgFc5KTGv5CA2NiyjTMnytnNUkaDRq0N6XY3AUvd2Il6ZCD5SzxbzwdRulMdIKbgk76fzShDX9hoJcg4ubExbG+9KeIZQV4p3UgB9B0C1WIu+TZFJ5+X8u1d23n9Nd/aJJHzljmkxOkQGBclVLWqmLMg6CpV3pSZMYZ5qc03NtzSONl0oYoRdwtiEu5lmA2Es4i3/+NzFIayNxLfXh1N8ZiW2cPIHn3tlI//8Y9m0U5CG6JwiJhL7+OKMd6lm/wF2GhUmK4jBkfInEi09af1Bhg3tNglym9gSFE90zh8bVp58C7cpsHej3dIG/jP5uwRC1wu1GcV0xVvJuGbc9cgP3Uq7/n0tmL0jm3Y07oydMjXqfpYXoUX5UfcjmFsme+CKnnTYSqvyakp9WrZufyQn7LMjAs4bLlGhzGdJ91Z+4vtZvtGoKnLfv3KlbTVviWS7/PLakTAmlwyeNnIjlmjy3UmAgjq9utvGuNXF8HQl8SURL92ga8YgYElSM1crZ7O40lW2xecIoByYT4E8uDqGCQvd6UAfDjm4hsR2hN12WG2Kz7Gd8ApEYRTSLT+mEE6ut5Bf35JwMYMgzjvOqFAKOzlSW5YhXcjm95Npw8Jzk1OVNG5gn8G2t6JCRelyYpiUsKjSdc/QHJxqwLCMxbMeRPg2rN9nrlvqV4nBghZ7wFgb93TojD1W8eGmYhXUssQu/y1khZBR1j8RWf5gFz61yTAKthrlbZY+3G8+alVZ+GiwliFMhFOrUUsxGWNnKRmj8gtl4LX213XtIvP+C7sNxU1wRJeelFz9Gf8xHCWRYD/LHWnebOa3Q29fS3UnVvRYmwWFrCnHnvjZrA3Spi4vOgAWp28vCpXTl+l66kKDRNNM7dqH9GR7L78QKRAmEjaRsex26DybFhFxKjXI5ML2CcW1FIPhDWwEZ37HuYqy7qmvEIq3SaOpqZkXevXF7JDY9cqjcPzOAeS45XWzCmMepKon4NZotDA0VjuyHaeT9KUeqP7Y98RM0nVVhvOK4vrM0WTY2WsMjJScbSERTRn798nrxO2IkVJHszlvtPS2Wwetpt1c2s6laDS8wXFOJ96cf2uwx1DP+ZKMwCM4QUeBII6SqwVwVjZHzC6/4gj/455s+SkaVrPdxDz/H5iGpRBoVRWFIp0pmQywz5wNOkOMxha1/OtkjBPymtHNCzxAfWljxAxzt5MazmHi6vL89r6BRnt9d+ru154BD9JOAE7aevzJOz0oE7aYuPIp63x6YLoDhNx1bZHFYK4fQ0jf6jnQG0sNe1eerCxE9jCfQn3D156D6EO29K9j2E0SYjX3aFZKLWzVQTkOX9eYkLgyfsimHFXEUXBvExjtd1unpgEVzsUNtT+d+9XWZ4euy1zS2GYcFkSlWz74plhz9DnH6LmlRJvAhQCfSbllx9zprv5immUsJa4/YrvS575N/UcY4n6Xh/0PXJ3ZiGflXLIv0hkiUUD/3/c3t7zkMxNDnH3XV8Ooahowm7dkvxEwe7Dus89nTu++VYZiCGzJeCJ1u+vMx//WPr3ybKMfRZxOtJOwhvkKp4jxFY5/3pGG81zDmR05qGFk4+6i+IZIKyF9jfP5M6X8+B8/IKT+2Y+vXqi34YzcpfkRTb2ubGi71Vs+gabSfJ1/eVbVYuGyxRusRl64bQ=" />
+     
+    
+    <div class="header">
+        <nav class="navbar navbar-dark">
+            <div class="container-fluid">
+                <h1 class="navbar-brand">
+                    TOPVIEW Administration
+                </h1>
+                    
+                <ul class="nav">
+                    
+                            <li>
+                                <a href="Account/Login.aspx" id="HeadLoginView_HeadLoginStatus">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Log In</a>                                  
+                                </li>
+                        
+                </ul> 
+                <div class="navbar-expand-md navbar-button-expand-md">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar-expand-md">
+            <div class="clear hideSkiplink navbar-collapse collapse" id="navbarcollapse" style="z-index: 2;">
+                <a href="#NavigationMenu_SkipLink"><img alt="Skip Navigation Links" src="/WebResource.axd?d=_x8qi3AYmj_aoxjjRQa44kfDnOaep-U3kq5MyXZ85-DCGAbF-nckM88irqpA9kh9WZai1begYAnOF8Mv6fE7CDbCDhUW3rVzZyHx7oqcUSE1&amp;t=638469983903148691" width="0" height="0" border="0" /></a><div class="menu navbar-nav" id="NavigationMenu">
+	<ul class="level1">
+		<li><a class="popout level1 MenuDefaultMenuItemStyle">Account</a><ul class="level2">
+			<li><a class="level2 MenuDefaultMenuItemStyle" href="/Account/Login.aspx">Login</a></li>
+		</ul></li>
+	</ul>
+</div><a id="NavigationMenu_SkipLink"></a>
+            </div>
+        </nav>
+    </div>
+    <div class="page">
+        <div class="main">           
+            
+    <script type="text/javascript">
+        function calendarShown(sender, args) {
+            sender._popupBehavior._element.style.zIndex = 1000000;
+        }
+        function clearFields() {
+
+
+            document.getElementById('MainContent_txtFirst').value = '';
+            document.getElementById('MainContent_txtLast').value = '';
+            document.getElementById('MainContent_rdBtnListTours').value = 0;
+            document.getElementById('MainContent_ddlRentalStartingTime').value = 0;
+            document.getElementById('MainContent_ddlRentalDuration').value = 0;
+            document.getElementById('MainContent_txtExecutionTime').value = '';
+            document.getElementById('MainContent_hdnPopUpCmd').value = 'Insert';
+            document.getElementById('MainContent_lblError').value = '';
+            document.getElementById('MainContent_ddlMales').value = 0;
+            document.getElementById('MainContent_ddlFemales').value = 0;
+            document.getElementById('MainContent_ddlKids').value = 0;
+            document.getElementById('MainContent_ddlTrailers').value = 0;
+            document.getElementById('MainContent_ddlTandem').value = 0;
+            document.getElementById('MainContent_ddlWalkingTour').value = 0;
+            document.getElementById('MainContent_ddlBusTour').value = 0;
+            document.getElementById('MainContent_ddlPedicabDuration').value = 0;
+            document.getElementById('MainContent_ddlPedicabTour').value = 0;
+            document.getElementById('MainContent_ddlCPStartingTime').value = 0;
+//            document.getElementById('MainContent_txtPAN').value = 0;
+//            document.getElementById('MainContent_txtMonth').value = 0;
+//            document.getElementById('MainContent_txtYear').value = 0;
+            document.getElementById('MainContent_txtPrice').value = 0;
+            document.getElementById('MainContent_txtTax').value = 0;
+            document.getElementById('MainContent_txtTotal').value = 0;
+
+
+
+        }
+
+       
+    </script>
+    
+    
+    <center>
+       
+        
+        <table>
+            <tr>
+                <td>
+                    <a onclick="clearFields();" id="MainContent_btnShowPopUp" href="javascript:__doPostBack(&#39;ctl00$MainContent$btnShowPopUp&#39;,&#39;&#39;)" style="color: Red"><font size="7">Add Reservation</font></a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="*">
+                    <div id="MainContent_pnlPopup" class="popup" style="display: none;font-weight:bold;font-family:@Arial Unicode MS;"><font size="5">
+	
+                        <table cellpadding="2" cellspacing="0" border="0" width="100%" style="padding-top:10px;">
+                            <tr>
+                                <td align="left">
+                                    First Name                                
+                                    <input name="ctl00$MainContent$txtFirst" type="text" id="MainContent_txtFirst" />
+                                    &nbsp;  
+                                  </td>
+                                  <td align="left">
+                                    Last Name                         
+                                    <input name="ctl00$MainContent$txtLast" type="text" id="MainContent_txtLast" />
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    Interest
+                                </td>
+                                <td align="left">
+                                    Starting Time &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  Duration
+                                </td>
+                                
+                            </tr>
+                            <tr>
+
+                                <td align="left" colspan="1">
+                                    <span id="MainContent_rdBtnListTours"><input id="MainContent_rdBtnListTours_0" type="radio" name="ctl00$MainContent$rdBtnListTours" value="1" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$0\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_0">Bike Rental</label><br /><input id="MainContent_rdBtnListTours_1" type="radio" name="ctl00$MainContent$rdBtnListTours" value="7" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$1\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_1">Pedicab Tour</label><br /><input id="MainContent_rdBtnListTours_2" type="radio" name="ctl00$MainContent$rdBtnListTours" value="8" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$2\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_2">Bus Tour</label><br /><input id="MainContent_rdBtnListTours_3" type="radio" name="ctl00$MainContent$rdBtnListTours" value="9" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$3\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_3">Walking Tour</label><br /><input id="MainContent_rdBtnListTours_4" type="radio" name="ctl00$MainContent$rdBtnListTours" value="2" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$4\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_4">Central Park Bike Tour</label><br /><input id="MainContent_rdBtnListTours_5" type="radio" name="ctl00$MainContent$rdBtnListTours" value="3" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$5\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_5">Brooklyn Tour</label><br /><input id="MainContent_rdBtnListTours_6" type="radio" name="ctl00$MainContent$rdBtnListTours" value="4" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$6\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_6">New York at Night Tour</label><br /><input id="MainContent_rdBtnListTours_7" type="radio" name="ctl00$MainContent$rdBtnListTours" value="5" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$7\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_7">Harlem Tour</label><br /><input id="MainContent_rdBtnListTours_8" type="radio" name="ctl00$MainContent$rdBtnListTours" value="6" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$rdBtnListTours$8\&#39;,\&#39;\&#39;)&#39;, 0)" /><label for="MainContent_rdBtnListTours_8">City Tour</label></span>
+                                    &nbsp;
+                                </td>
+                                <td align="left" valign="top">
+                                    <table width="100%" border="0">
+                                        <tr>
+                                            <td>
+                                                <select name="ctl00$MainContent$ddlRentalStartingTime" id="MainContent_ddlRentalStartingTime">
+		<option value="0">Select Time</option>
+		<option value="9">9:00am</option>
+		<option value="9.5">9:30am</option>
+		<option value="10">10:00am</option>
+		<option value="10.5">10:30am</option>
+		<option value="11">11:00am</option>
+		<option value="11.5">11:30am</option>
+		<option value="12">12:00pm</option>
+		<option value="12.5">12:30pm</option>
+		<option value="13">13:00pm</option>
+		<option value="13.5">13:30pm</option>
+		<option value="14">14:00pm</option>
+		<option value="14.5">14:30pm</option>
+		<option value="15">15:00pm</option>
+		<option value="15.5">15:30pm</option>
+		<option value="16">16:00pm</option>
+		<option value="16.5">16:30pm</option>
+		<option value="17">17:00pm</option>
+		<option value="17.5">17:30pm</option>
+		<option value="18">18:00pm</option>
+		<option value="18.5">18:30pm</option>
+		<option value="19">19:00pm</option>
+		<option value="19.5">19:30pm</option>
+		<option value="20">20:00pm</option>
+		<option value="20.5">20:30pm</option>
+		<option value="21">21:00pm</option>
+
+	</select>
+                                            </td>
+                                            <td>
+                                                <select name="ctl00$MainContent$ddlRentalDuration" id="MainContent_ddlRentalDuration">
+		<option selected="selected" value="0">Select Duration</option>
+		<option value="2">2 Hours</option>
+		<option value="3">3 Hours</option>
+		<option value="4">4 Hours</option>
+		<option value="24">All Day</option>
+
+	</select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select name="ctl00$MainContent$ddlPedicabTour" id="MainContent_ddlPedicabTour">
+		<option value="0">Select Time</option>
+		<option value="9">9:00am</option>
+		<option value="9.5">9:30am</option>
+		<option value="10">10:00am</option>
+		<option value="10.5">10:30am</option>
+		<option value="11">11:00am</option>
+		<option value="11.5">11:30am</option>
+		<option value="12">12:00pm</option>
+		<option value="12.5">12:30pm</option>
+		<option value="13">13:00pm</option>
+		<option value="13.5">13:30pm</option>
+		<option value="14">14:00pm</option>
+		<option value="14.5">14:30pm</option>
+		<option value="15">15:00pm</option>
+		<option value="15.5">15:30pm</option>
+		<option value="16">16:00pm</option>
+		<option value="16.5">16:30pm</option>
+		<option value="17">17:00pm</option>
+		<option value="17.5">17:30pm</option>
+		<option value="18">18:00pm</option>
+		<option value="18.5">18:30pm</option>
+		<option value="19">19:00pm</option>
+		<option value="19.5">19:30pm</option>
+		<option value="20">20:00pm</option>
+		<option value="20.5">20:30pm</option>
+		<option value="21.5">21:00pm</option>
+
+	</select>
+                                            </td>
+                                            <td>
+                                                <select name="ctl00$MainContent$ddlPedicabDuration" id="MainContent_ddlPedicabDuration">
+		<option value="0">Select Duration</option>
+		<option value="1">1 Hour</option>
+		<option value="2">2 Hours</option>
+		<option value="3">3 Hours</option>
+		<option value="4">4 Hours</option>
+
+	</select>
+                                            </td>
+                                        </tr>
+                                       <tr>
+                                            <td>
+                                                <select name="ctl00$MainContent$ddlBusTour" id="MainContent_ddlBusTour">
+		<option value="0">Choose a Tour</option>
+		<option value="1">Downtown Bus Tour</option>
+		<option value="2">Uptown Bus Tour</option>
+		<option value="3">All City Bus Tour</option>
+		<option value="4">Night Bus Tour</option>
+		<option value="5">Brooklyn Bus Tour</option>
+		<option value="6">24 Hour Super Bus Tour</option>
+		<option value="7">48 Hour Super Bus Tour</option>
+
+	</select>
+                                            </td>
+                                            <td>
+                                               Will be printed on ticket
+                                            </td>
+                                        </tr>
+
+                                          <tr>
+                                            <td>
+                                                <select name="ctl00$MainContent$ddlWalkingTour" id="MainContent_ddlWalkingTour">
+		<option value="0">Choose a Tour</option>
+		<option value="1">Central Park Walking Tour</option>
+		<option value="2">Harlem Walking Tour</option>
+		<option value="3">Midtown Walking Tour</option>
+		<option value="4">Little Italy Walking Tour</option>
+		<option value="5">Brooklyn Walking Tour</option>
+
+	</select>
+                                            </td>
+                                            <td>
+                                               2 Hours Central Park /Other 3 Hours 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select name="ctl00$MainContent$ddlCPStartingTime" id="MainContent_ddlCPStartingTime">
+		<option value="0">Select Time</option>
+		<option value="10">10:00am</option>
+		<option value="13">13:00pm</option>
+		<option value="16">16:00pm</option>
+
+	</select>
+                                            </td>
+                                            <td>
+                                                2 hours
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                2:00pm
+                                            </td>
+                                            <td>
+                                                3 hours
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                7:00pm
+                                            </td>
+                                            <td>
+                                                2 hours
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                2:00pm
+                                            </td>
+                                            <td>
+                                                3 hours
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                10:00am
+                                            </td>
+                                            <td>
+                                                3 hours
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                Male(s):
+                                            </td>
+                                            <td align="left">
+                                                <select name="ctl00$MainContent$ddlMales" id="MainContent_ddlMales">
+		<option selected="selected" value="0">Select</option>
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+		<option value="13">13</option>
+		<option value="14">14</option>
+		<option value="15">15</option>
+		<option value="16">16</option>
+		<option value="17">17</option>
+		<option value="18">18</option>
+		<option value="19">19</option>
+		<option value="20">20</option>
+
+	</select>
+                                                
+                                                Female(s):
+                                            </td>
+                                            <td align="left">
+                                                <select name="ctl00$MainContent$ddlFemales" id="MainContent_ddlFemales">
+		<option selected="selected" value="0">Select</option>
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+		<option value="13">13</option>
+		<option value="14">14</option>
+		<option value="15">15</option>
+		<option value="16">16</option>
+		<option value="17">17</option>
+		<option value="18">18</option>
+		<option value="19">19</option>
+		<option value="20">20</option>
+
+	</select>
+                                            
+                                                Kids(s):
+                                            </td>
+                                            <td align="left">
+                                                <select name="ctl00$MainContent$ddlKids" id="MainContent_ddlKids">
+		<option selected="selected" value="0">Select</option>
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+		<option value="13">13</option>
+		<option value="14">14</option>
+		<option value="15">15</option>
+		<option value="16">16</option>
+		<option value="17">17</option>
+		<option value="18">18</option>
+		<option value="19">19</option>
+		<option value="20">20</option>
+
+	</select>
+                                            </td>
+                                        
+                                            <td>
+                                                Trailer(s):
+                                            </td>
+                                            <td align="left">
+                                                <select name="ctl00$MainContent$ddlTrailers" id="MainContent_ddlTrailers">
+		<option selected="selected" value="0">Select</option>
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+
+	</select>
+                                           
+                                                BabySeat(s):
+                                            </td>
+                                            <td align="left">
+                                                <select name="ctl00$MainContent$ddlBabySeat" id="MainContent_ddlBabySeat">
+		<option selected="selected" value="0">Select</option>
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+
+	</select>
+                                           
+                                                Tandem(s):
+                                            </td>
+                                            <td align="left">
+                                                <select name="ctl00$MainContent$ddlTandem" id="MainContent_ddlTandem">
+		<option selected="selected" value="0">Select</option>
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+
+	</select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    Reservation Time:                               
+                                    <input name="ctl00$MainContent$txtExecutionTime" type="text" id="MainContent_txtExecutionTime" />
+                                    &nbsp;
+                                    
+                                    
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    Payment Method:                              
+                                    <select name="ctl00$MainContent$ddlPaymentType" id="MainContent_ddlPaymentType">
+		<option selected="selected" value="0">Cash</option>
+		<option value="1">Card</option>
+
+	</select>
+                                    
+                                </td>
+                            </tr>
+                            <tr id="MainContent_vwPaymentMethod">
+		<td colspan="3" align="left">
+                                    
+                                            Cash
+                                        
+                                </td>
+	</tr>
+	
+                            <tr>
+                                <td align="left" colspan="2">
+                                    Price:&nbsp;&nbsp;&nbsp;<input name="ctl00$MainContent$txtPrice" type="text" readonly="readonly" id="MainContent_txtPrice" />
+                               
+                                    Tax:&nbsp;&nbsp;&nbsp;&nbsp;<input name="ctl00$MainContent$txtTax" type="text" readonly="readonly" id="MainContent_txtTax" />
+                               
+                                    Total:&nbsp;<input name="ctl00$MainContent$txtTotal" type="text" readonly="readonly" id="MainContent_txtTotal" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a id="MainContent_btnOk" class="btn" href="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$MainContent$btnOk&quot;, &quot;&quot;, true, &quot;AddSession&quot;, &quot;&quot;, false, true))">Add Reservation</a>
+                                </td>
+                                <td >
+                                    <a id="MainContent_btnCancel" class="btn" href="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$MainContent$btnCancel&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Reservations.aspx&quot;, false, true))">Cancel</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span id="MainContent_lblError"><font color="Red"></font></span>
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                    
+</font></div>
+                    
+                    
+                    
+                </td>
+            </tr>
+        </table>
+        <table width="600px;">
+            <tr>
+                <td style="margin: 10px; padding: 10px; vertical-align: top;" align="left">
+                    <div class="subheader">
+                        Date
+                    </div>
+                    <br />
+                    <div>
+                        <table id="MainContent_calCampaignSelector" cellspacing="0" cellpadding="4" title="Calendar" bordercolor="#999999" width="200" height="180" bgcolor="White">
+	<tr><td colspan="7" bgcolor="#999999"><font face="Verdana" color="Black" size="1"><table cellspacing="0" width="100%">
+		<tr><td valign="bottom" width="15%"><font face="Verdana" color="Black" size="1"><b><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','V9556')" style="color:Black" title="Go to the previous month">&lt;</a></b></font></td><td align="center" width="70%"><font face="Verdana" color="Black" size="1"><b>April 2026</b></font></td><td align="right" valign="bottom" width="15%"><font face="Verdana" color="Black" size="1"><b><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','V9617')" style="color:Black" title="Go to the next month">&gt;</a></b></font></td></tr>
+	</table></font></td></tr><tr><th align="center" abbr="Sunday" scope="col" bgcolor="#CCCCCC"><font face="Verdana" color="Black" size="1"><b>Su</b></font></th><th align="center" abbr="Monday" scope="col" bgcolor="#CCCCCC"><font face="Verdana" color="Black" size="1"><b>Mo</b></font></th><th align="center" abbr="Tuesday" scope="col" bgcolor="#CCCCCC"><font face="Verdana" color="Black" size="1"><b>Tu</b></font></th><th align="center" abbr="Wednesday" scope="col" bgcolor="#CCCCCC"><font face="Verdana" color="Black" size="1"><b>We</b></font></th><th align="center" abbr="Thursday" scope="col" bgcolor="#CCCCCC"><font face="Verdana" color="Black" size="1"><b>Th</b></font></th><th align="center" abbr="Friday" scope="col" bgcolor="#CCCCCC"><font face="Verdana" color="Black" size="1"><b>Fr</b></font></th><th align="center" abbr="Saturday" scope="col" bgcolor="#CCCCCC"><font face="Verdana" color="Black" size="1"><b>Sa</b></font></th></tr><tr><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9584')" style="color:Gray" title="March 29">29</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9585')" style="color:Gray" title="March 30">30</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9586')" style="color:Gray" title="March 31">31</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9587')" style="color:Black" title="April 1">1</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9588')" style="color:Black" title="April 2">2</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9589')" style="color:Black" title="April 3">3</a></font></td><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9590')" style="color:Black" title="April 4">4</a></font></td></tr><tr><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9591')" style="color:Black" title="April 5">5</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9592')" style="color:Black" title="April 6">6</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9593')" style="color:Black" title="April 7">7</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9594')" style="color:Black" title="April 8">8</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9595')" style="color:Black" title="April 9">9</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9596')" style="color:Black" title="April 10">10</a></font></td><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9597')" style="color:Black" title="April 11">11</a></font></td></tr><tr><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9598')" style="color:Black" title="April 12">12</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9599')" style="color:Black" title="April 13">13</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9600')" style="color:Black" title="April 14">14</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9601')" style="color:Black" title="April 15">15</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9602')" style="color:Black" title="April 16">16</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9603')" style="color:Black" title="April 17">17</a></font></td><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9604')" style="color:Black" title="April 18">18</a></font></td></tr><tr><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9605')" style="color:Black" title="April 19">19</a></font></td><td align="center" bgcolor="#CCCCCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9606')" style="color:Black" title="April 20">20</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9607')" style="color:Black" title="April 21">21</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9608')" style="color:Black" title="April 22">22</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9609')" style="color:Black" title="April 23">23</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9610')" style="color:Black" title="April 24">24</a></font></td><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9611')" style="color:Black" title="April 25">25</a></font></td></tr><tr><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9612')" style="color:Black" title="April 26">26</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9613')" style="color:Black" title="April 27">27</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9614')" style="color:Black" title="April 28">28</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9615')" style="color:Black" title="April 29">29</a></font></td><td align="center" width="14%"><font face="Verdana" color="Black" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9616')" style="color:Black" title="April 30">30</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9617')" style="color:Gray" title="May 1">1</a></font></td><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9618')" style="color:Gray" title="May 2">2</a></font></td></tr><tr><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9619')" style="color:Gray" title="May 3">3</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9620')" style="color:Gray" title="May 4">4</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9621')" style="color:Gray" title="May 5">5</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9622')" style="color:Gray" title="May 6">6</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9623')" style="color:Gray" title="May 7">7</a></font></td><td align="center" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9624')" style="color:Gray" title="May 8">8</a></font></td><td align="center" bgcolor="#FFFFCC" width="14%"><font face="Verdana" color="Gray" size="1"><a href="javascript:__doPostBack('ctl00$MainContent$calCampaignSelector','9625')" style="color:Gray" title="May 9">9</a></font></td></tr>
+</table>
+                    </div>
+                </td>
+                <td style="margin: 10px; padding: 10px;">
+                    <div class="subheader" style="padding: 10px; margin: 10px;">
+                        Reservations
+                    </div>
+                    <br />
+                    <div>
+                        <div>
+
+</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <input type="hidden" name="ctl00$MainContent$hdnPopUpCmd" id="MainContent_hdnPopUpCmd" value="Insert" />
+        <input type="hidden" name="ctl00$MainContent$hdnScheduledExecutionID" id="MainContent_hdnScheduledExecutionID" />
+        <input type="hidden" name="ctl00$MainContent$hdnPan" id="MainContent_hdnPan" />
+        <input type="hidden" name="ctl00$MainContent$txtCommand" id="MainContent_txtCommand" />
+        
+    </center>
+
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <div>Copyright GoNYCTours<sup>&#169;</sup> 2026</div>
+        </div>
+    </div>
+       
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+(function() {var fn = function() {$get("smBack_HiddenField").value = '';Sys.Application.remove_init(fn);};Sys.Application.add_init(fn);})();//]]>
+</script>
+<script type='text/javascript'>new Sys.WebForms.Menu({ element: 'NavigationMenu', disappearAfter: 500, orientation: 'horizontal', tabIndex: 0, disabled: false });</script>
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.CalendarBehavior, {"format":"MM/dd/yyyy","id":"MainContent_txtExecutionTime_CalendarExtender"}, {"shown":calendarShown}, null, $get("MainContent_txtExecutionTime"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.Extended.UI.ModalPopupBehavior, {"BackgroundCssClass":"popupModalBackground","DropShadow":true,"PopupControlID":"MainContent_pnlPopup","dynamicServicePath":"/Reservations.aspx","id":"MainContent_MPE"}, null, null, $get("MainContent_btnShowPopUp"));
+});
+//]]>
+</script>
+</form>
+
+      
+    <div id="loadingOverlay" class="loading-overlay"><div class="spinner"></div></div>
+</body>
+</html>

@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Topview Logger</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-512.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Topview" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <svg style="display:none">
+    <symbol id="icon-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+    <symbol id="icon-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="icon-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+    <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="icon-bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v6"/><path d="M16 6v6"/><path d="M2 12h20"/><path d="M18 18H6a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v7a4 4 0 0 1-4 4z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+    <symbol id="icon-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></symbol>
+    <symbol id="icon-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></symbol>
+    <symbol id="icon-navigation" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></symbol>
+    <symbol id="icon-boat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2-1a2.4 2.4 0 0 1 2-1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2-1a2.4 2.4 0 0 1 2-1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2-1"/><path d="M3 17l1.5-6h15L21 17"/><path d="M6 11V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="10" y1="8" x2="14" y2="8"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <!-- Previously referenced but missing (rendered as blank buttons) -->
+    <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="icon-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.36 6.36L3 16"/><path d="M3 12a9 9 0 0 1 15.36-6.36L21 8"/><polyline points="21 3 21 8 16 8"/><polyline points="3 21 3 16 8 16"/></symbol>
+    <symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="icon-arrow-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+    <symbol id="icon-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+    <!-- Ring bubble glyphs -->
+    <symbol id="icon-grid" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="5" cy="5" r="2.1"/><circle cx="12" cy="5" r="2.1"/><circle cx="19" cy="5" r="2.1"/><circle cx="5" cy="12" r="2.1"/><circle cx="12" cy="12" r="2.1"/><circle cx="19" cy="12" r="2.1"/><circle cx="5" cy="19" r="2.1"/><circle cx="12" cy="19" r="2.1"/><circle cx="19" cy="19" r="2.1"/></symbol>
+    <symbol id="icon-stopwatch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="8"/><line x1="12" y1="14" x2="12" y2="10"/><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="19" y1="7" x2="20.5" y2="5.5"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="icon-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17a9 9 0 1 1 17 0"/><line x1="12" y1="14" x2="16" y2="9"/><circle cx="12" cy="14" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="icon-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></symbol>
+    <symbol id="icon-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="icon-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></symbol>
+    <symbol id="icon-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+  </svg>
+  <style>
+    /* === SAMSARA BEACON OVERRIDES === */
+    .bus-custom-marker { overflow: visible !important; z-index: 9999 !important; }
+    .bus-marker-wrapper { display: flex !important; flex-direction: column !important; align-items: center !important; overflow: visible !important; width: 100px; margin-left: -50px; position: relative; }
+    .bus-number-label { background: rgba(0, 0, 0, 0.9); color: #fff; padding: 2px 10px; border-radius: 6px; font-size: 13px; font-weight: 800; border: 1px solid rgba(255, 255, 255, 0.2); margin-bottom: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.8); white-space: nowrap; z-index: 100; }
+    .bus-beacon { width: 16px; height: 16px; position: relative; display: flex; align-items: center; justify-content: center; }
+    .bus-dot-core { width: 14px; height: 14px; background: #2ecc71 !important; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 10px #2ecc71, 0 0 20px rgba(46, 204, 113, 0.5); z-index: 2; }
+    .bus-pulse-ring { position: absolute; width: 14px; height: 14px; border: 3px solid #2ecc71; border-radius: 50%; animation: beacon-pulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite; z-index: 1; }
+    @keyframes beacon-pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(4); opacity: 0; } }
+    .leaflet-marker-pane { filter: none !important; }
+    /* === ROUTE STOP STYLES === */
+    .stop-custom-marker { overflow: visible !important; pointer-events: auto !important; cursor: help; }
+    .stop-marker-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; width: 24px; height: 24px; }
+    .stop-dot { width: 16px; height: 16px; background: rgba(0, 0, 0, 0.9); border: 2px solid #2ecc71; border-radius: 50%; box-shadow: 0 0 10px #2ecc71; z-index: 1; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: #2ecc71; font-size: 8px; font-weight: 900; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1; }
+    .stop-marker-wrapper:hover .stop-dot { background: #2ecc71; color: #000; transform: scale(1.3); box-shadow: 0 0 18px #2ecc71; }
+    .stop-tip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #000; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; opacity: 0; pointer-events: none; transition: all 0.2s ease; white-space: nowrap; margin-bottom: 8px; border: 1px solid #2ecc71; box-shadow: 0 4px 15px rgba(0,0,0,0.8); z-index: 200; }
+    .stop-marker-wrapper:hover .stop-tip { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+  </style>
+</head>
+<body style="background-color: #0a0a0a; margin: 0; padding: 0;">
+  <script>
+    // EMERGENCY RECOVERY: Forcibly clear any stale service workers/caches that break the UI
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let registration of registrations) {
+          registration.unregister().then(() => {
+            console.log("Stale Service Worker Cleared. Refreshing for clean state...");
+            window.location.reload(true);
+          });
+        }
+      });
+    }
+    // Clear caches
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) caches.delete(name);
+      });
+    }
+    console.log("V10.5.0 Noir Recovery Active.");
+  </script>
+
+  <!-- Ambient drifting color field (behind everything) -->
+  <div class="ambient" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+
+  <div id="app">
+
+  <!-- ============ LOGIN VIEW ============ -->
+  <main id="login-view" class="view active">
+    <div class="login-shell">
+      <div class="clock-face clock-face--login" aria-hidden="true">
+        <span class="clock-date" data-clock="date">---</span>
+        <span class="clock-time" data-clock="time">--:--</span>
+        <span class="clock-ampm" data-clock="ampm"></span>
+      </div>
+      <div class="container card login-card">
+        <header class="view-header">
+          <h1>Topview Logger</h1>
+          <p class="subtitle">Enter your name to continue</p>
+        </header>
+        <div class="login-form">
+          <div class="input-group">
+            <label for="username">Name</label>
+            <input type="text" id="username" placeholder="Enter name..." autocomplete="off" />
+          </div>
+          <button id="btn-login-confirm" class="btn-primary">
+            <span>Enter</span>
+          </button>
+        </div>
+        <div class="version-tag">v10.5.0 · Fast-Dispatch</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ RING HOME (Main / Reports / Other / Forms) ============ -->
+  <!-- All four rings live in one view. RingNav (app.js) handles the zoom transitions.
+       showView('reports-menu' | 'other-menu' | 'forms-menu') still works through aliases. -->
+  <main id="menu-view" class="view ring-view">
+    <header class="ring-header" id="ring-header">
+      <span class="ring-eyebrow" id="ring-eyebrow">Topview Logger</span>
+      <h1 class="ring-title" id="ring-title">Welcome</h1>
+    </header>
+
+    <div class="ring-stage" id="ring-stage">
+
+      <!-- MAIN: Dual ring (Reports, Other) + Forms -->
+      <div class="ring is-active" data-ring="main">
+        <div class="slot" style="--x:-0.3464; --y:-0.2; --i:0">
+          <button class="bubble tone-green" data-ring-go="reports" aria-label="Reports">
+            <svg class="bubble-glyph"><use href="#icon-bus"/></svg>
+            <span class="bubble-label">Reports</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:0.3464; --y:-0.2; --i:1">
+          <button class="bubble tone-blue" data-ring-go="other" aria-label="Other">
+            <svg class="bubble-glyph"><use href="#icon-folder"/></svg>
+            <span class="bubble-label">Other</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:0; --y:0.4; --i:2">
+          <button class="bubble tone-purple" data-ring-go="forms" aria-label="Forms">
+            <svg class="bubble-glyph"><use href="#icon-file"/></svg>
+            <span class="bubble-label">Forms</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- REPORTS: Quad ring -->
+      <div class="ring" data-ring="reports">
+        <div class="slot" style="--x:-0.2828; --y:-0.2828; --i:0">
+          <button id="btn-goto-fullloop" class="bubble tone-green" aria-label="Full Loop Report">
+            <svg class="bubble-glyph"><use href="#icon-bus"/></svg>
+            <span class="bubble-label">Full Loop</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:0.2828; --y:-0.2828; --i:1">
+          <button id="btn-goto-stopwatch" class="bubble tone-blue" aria-label="Stopwatch Report">
+            <svg class="bubble-glyph"><use href="#icon-stopwatch"/></svg>
+            <span class="bubble-label">Stopwatch</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:-0.2828; --y:0.2828; --i:2">
+          <button id="btn-goto-liberty" class="bubble tone-orange" aria-label="Liberty Cruise">
+            <svg class="bubble-glyph"><use href="#icon-boat"/></svg>
+            <span class="bubble-label">Liberty<br>Cruise</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:0.2828; --y:0.2828; --i:3">
+          <button class="bubble tone-silver" data-ring-go="main" aria-label="Back to Menu">
+            <svg class="bubble-glyph"><use href="#icon-arrow-back"/></svg>
+            <span class="bubble-label">Menu</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- OTHER: Quad ring -->
+      <div class="ring" data-ring="other">
+        <div class="slot" style="--x:-0.2828; --y:-0.2828; --i:0">
+          <button id="btn-goto-global-notes" class="bubble tone-amber" aria-label="Notes">
+            <svg class="bubble-glyph"><use href="#icon-note"/></svg>
+            <span class="bubble-label">Notes</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:0.2828; --y:-0.2828; --i:1">
+          <button id="btn-goto-tracker" class="bubble tone-teal" aria-label="Samsara Map">
+            <svg class="bubble-glyph"><use href="#icon-map"/></svg>
+            <span class="bubble-label">Samsara<br>Map</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:-0.2828; --y:0.2828; --i:2">
+          <button id="btn-goto-speedometer" class="bubble tone-red" aria-label="Speedometer">
+            <svg class="bubble-glyph"><use href="#icon-gauge"/></svg>
+            <span class="bubble-label">Speedo-<br>meter</span>
+          </button>
+        </div>
+        <div class="slot" style="--x:0.2828; --y:0.2828; --i:3">
+          <button class="bubble tone-silver" data-ring-go="main" aria-label="Back to Menu">
+            <svg class="bubble-glyph"><use href="#icon-arrow-back"/></svg>
+            <span class="bubble-label">Menu</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FORMS: Quad ring (opens the Google Forms) -->
+      <div class="ring" data-ring="forms">
+        <div class="slot" style="--x:-0.2828; --y:-0.2828; --i:0">
+          <a class="bubble tone-mono hud-shortcut" href="https://docs.google.com/forms/d/e/1FAIpQLSdlcMExtKCdKrDjad4B4Rq1y4phVHG5nSJhY_seBxKgbQBSYw/viewform" data-url="https://docs.google.com/forms/d/e/1FAIpQLSdlcMExtKCdKrDjad4B4Rq1y4phVHG5nSJhY_seBxKgbQBSYw/viewform" target="_blank" rel="noopener noreferrer" aria-label="Stopwatch Form">
+            <svg class="bubble-glyph"><use href="#icon-stopwatch"/></svg>
+            <span class="bubble-label">Stopwatch</span>
+          </a>
+        </div>
+        <div class="slot" style="--x:0.2828; --y:-0.2828; --i:1">
+          <a class="bubble tone-mono hud-shortcut" href="https://docs.google.com/forms/d/e/1FAIpQLSfc97vaKGcC6Ijdjer5fyQ2M3qN93scHiBGDRWtD_gYhU1ROw/viewform" data-url="https://docs.google.com/forms/d/e/1FAIpQLSfc97vaKGcC6Ijdjer5fyQ2M3qN93scHiBGDRWtD_gYhU1ROw/viewform" target="_blank" rel="noopener noreferrer" aria-label="Full Loop Form">
+            <svg class="bubble-glyph"><use href="#icon-bus"/></svg>
+            <span class="bubble-label">Full Loop</span>
+          </a>
+        </div>
+        <div class="slot" style="--x:-0.2828; --y:0.2828; --i:2">
+          <a class="bubble tone-mono hud-shortcut" href="https://docs.google.com/forms/d/e/1FAIpQLScBb6QmvpC1LcDZnxf8IKMP388XwmDMJCF811M1kx1TOkmcwA/viewform" data-url="https://docs.google.com/forms/d/e/1FAIpQLScBb6QmvpC1LcDZnxf8IKMP388XwmDMJCF811M1kx1TOkmcwA/viewform" target="_blank" rel="noopener noreferrer" aria-label="Night Tour Form">
+            <svg class="bubble-glyph"><use href="#icon-moon"/></svg>
+            <span class="bubble-label">Night Tour</span>
+          </a>
+        </div>
+        <div class="slot" style="--x:0.2828; --y:0.2828; --i:3">
+          <button class="bubble tone-silver" data-ring-go="main" aria-label="Back to Menu">
+            <svg class="bubble-glyph"><use href="#icon-arrow-back"/></svg>
+            <span class="bubble-label">Menu</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CENTER: live clock (stays put across every ring; tap for account sheet) -->
+      <div class="clock-slot">
+        <button id="clock-bubble" class="clock-face clock-bubble" aria-label="Account and sign out">
+          <span class="clock-date" data-clock="date">---</span>
+          <span class="clock-time" data-clock="time">--:--</span>
+          <span class="clock-ampm" data-clock="ampm"></span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ ACCOUNT SHEET (opened from the clock bubble) ============ -->
+  <div id="account-sheet" class="sheet-overlay" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-label="Account">
+      <div class="sheet-handle"></div>
+      <div class="sheet-avatar" id="sheet-avatar">?</div>
+      <h3 id="menu-welcome" class="sheet-name">Welcome</h3>
+      <div class="sheet-stats">
+        <div class="offline-badge">Offline Storage Active</div>
+        <span id="menu-storage-count">0 reports saved locally</span>
+      </div>
+      <button id="btn-menu-logout" class="btn-danger sheet-btn">
+        <svg class="icon-sm"><use href="#icon-logout"/></svg>
+        <span>Sign Out</span>
+      </button>
+      <button id="btn-close-account-sheet" class="btn-secondary sheet-btn"><span>Close</span></button>
+      <div class="version-tag">Topview Logger v10.5.0</div>
+    </div>
+  </div>
+
+  <!-- ============ SPEEDOMETER VIEW ============ -->
+  <main id="speedometer-view" class="view">
+    <div class="container container-medium">
+      <!-- Header Row -->
+      <header class="view-header-row" style="margin-bottom: 1.25rem;">
+        <button class="icon-btn-sm btn-back" data-target="other-menu"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>Speedometer</h2>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <button id="btn-speedo-mode-toggle" class="pill-badge" style="cursor: pointer; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; font-size: 0.62rem; font-weight: 700; padding: 3px 8px;" title="Click to toggle Real GPS / Demo Simulator">
+            Mode: Real GPS
+          </button>
+          <span id="speedo-wakelock-badge" class="pill-badge" style="background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.25); color: #2ecc71; font-size: 0.62rem; font-weight: 700; padding: 3px 8px;">
+            ⚡ Screen Awake
+          </span>
+          <span id="speedo-gps-badge" class="pill-badge" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); font-size: 0.62rem; font-weight: 700; padding: 3px 8px; cursor: pointer;" title="GPS Connection Status">
+            GPS: Wait
+          </span>
+        </div>
+      </header>
+
+      <!-- GPS Troubleshooting & Diagnostic Notice -->
+      <div id="speedo-gps-notice" class="speedo-notice-card" style="display: none;">
+        <div class="speedo-notice-title">
+          <svg class="icon-xs" style="stroke: currentColor;"><use href="#icon-alert"/></svg>
+          <span id="speedo-notice-title-text">GPS Access Notice</span>
+        </div>
+        <p id="speedo-notice-desc" class="speedo-notice-msg">
+          Real GPS satellite lock is unavailable.
+        </p>
+        <div class="speedo-notice-actions">
+          <button id="btn-speedo-request-gps" class="btn-primary" style="padding: 6px 12px; font-size: 0.75rem;">📍 Request GPS Permission</button>
+          <button id="btn-speedo-start-sim" class="btn-secondary" style="padding: 6px 12px; font-size: 0.75rem;">▶️ Start Demo Simulator</button>
+          <a id="link-speedo-https" href="#" class="btn-secondary" style="display: none; padding: 6px 12px; font-size: 0.75rem; text-decoration: none; color: #fff; border-color: rgba(255,255,255,0.3);">🔒 Open Secure HTTPS</a>
+          <button id="btn-speedo-dismiss-notice" class="btn-tertiary" style="padding: 6px 10px; font-size: 0.72rem; opacity: 0.7; margin-left: auto;">Dismiss</button>
+        </div>
+      </div>
+
+      <!-- GAUGE CARD (Option C Hybrid Radial Arc + Digital Center) -->
+      <div id="speedo-gauge-card" class="speedo-card" style="text-align: center; position: relative; overflow: hidden;">
+        <!-- Overspeed Banner (Flashes when > 20 MPH) -->
+        <div id="speedo-overspeed-banner" class="speedo-warning-banner" style="display: none;">
+          <svg class="icon-xs" style="fill: #fff;"><use href="#icon-close"/></svg>
+          <span>OVERSPEED WARNING: EXCEEDING 20 MPH LIMIT</span>
+        </div>
+
+        <div class="speedo-arc-container">
+          <svg class="speedo-svg" viewBox="0 0 240 150">
+            <defs>
+              <linearGradient id="speedoGradNormal" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#27ae60"/>
+                <stop offset="65%" stop-color="#2ecc71"/>
+                <stop offset="100%" stop-color="#f1c40f"/>
+              </linearGradient>
+              <linearGradient id="speedoGradAlert" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#e67e22"/>
+                <stop offset="50%" stop-color="#e74c3c"/>
+                <stop offset="100%" stop-color="#ff3838"/>
+              </linearGradient>
+              <filter id="speedoGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+
+            <!-- Background Track Arc (Radius 85, Arc length 267) -->
+            <path class="speedo-track" d="M 35 130 A 85 85 0 0 1 205 130" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round"/>
+            
+            <!-- Active Fill Arc -->
+            <path id="speedo-active-arc" class="speedo-fill" d="M 35 130 A 85 85 0 0 1 205 130" fill="none" stroke="url(#speedoGradNormal)" stroke-width="14" stroke-linecap="round" stroke-dasharray="267" stroke-dashoffset="267" filter="url(#speedoGlow)"/>
+
+            <!-- Speed Limit Tick (20 MPH mark) -->
+            <line x1="91" y1="52" x2="88" y2="40" stroke="#f1c40f" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="84" y="34" fill="#f1c40f" font-size="8" font-weight="800" text-anchor="middle">20</text>
+            <text x="35" y="145" fill="rgba(255,255,255,0.4)" font-size="8" font-weight="700" text-anchor="middle">0</text>
+            <text x="205" y="145" fill="rgba(255,255,255,0.4)" font-size="8" font-weight="700" text-anchor="middle">60</text>
+          </svg>
+
+          <!-- Center Digital HUD readout -->
+          <div class="speedo-digital-center">
+            <div id="speedo-readout-speed" class="speedo-huge-num">0.0</div>
+            <div class="speedo-unit-label">MPH</div>
+            <div id="speedo-limit-badge" class="speedo-pill-limit">LIMIT: 20 MPH</div>
+          </div>
+        </div>
+
+        <!-- Live Location Strip -->
+        <div class="speedo-location-bar">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              <span class="pulse" style="width: 7px; height: 7px; flex-shrink: 0;"></span>
+              <span id="speedo-nearest-stop" style="font-size: 0.82rem; font-weight: 700; color: #fff;">Acquiring GPS location...</span>
+            </div>
+            <div id="speedo-distance" style="font-size: 0.76rem; font-weight: 700; color: var(--green); font-family: monospace; flex-shrink: 0;">-- mi away</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-METRICS HUD GRID -->
+      <div class="speedo-metrics-grid">
+        <div class="speedo-metric-tile">
+          <span class="speedo-metric-label">MAX SPEED</span>
+          <span id="speedo-metric-max" class="speedo-metric-val">0.0 <small style="font-size:0.65rem;">MPH</small></span>
+        </div>
+        <div class="speedo-metric-tile">
+          <span class="speedo-metric-label">AVG SPEED</span>
+          <span id="speedo-metric-avg" class="speedo-metric-val">0.0 <small style="font-size:0.65rem;">MPH</small></span>
+        </div>
+        <div class="speedo-metric-tile">
+          <span class="speedo-metric-label">>20 MPH DURATION</span>
+          <span id="speedo-metric-speeding" class="speedo-metric-val" style="color: #f1c40f;">00:00</span>
+        </div>
+        <div class="speedo-metric-tile">
+          <span class="speedo-metric-label">TOTAL TIME</span>
+          <span id="speedo-metric-time" class="speedo-metric-val">00:00</span>
+        </div>
+      </div>
+
+      <!-- CONTROLS ROW (Start and Finish Only) -->
+      <div class="speedo-controls-row" style="display: flex; gap: 0.6rem; margin-bottom: 1.25rem;">
+        <button id="btn-speedo-start" class="btn-primary speedo-ctrl-btn" style="flex: 2; background: #2ecc71; color: #000; padding: 1rem; font-size: 0.95rem;">
+          <svg class="icon-sm" style="fill: #000;"><use href="#icon-clock"/></svg>
+          <span id="speedo-start-text">Start</span>
+        </button>
+        <button id="btn-speedo-finish" class="btn-secondary speedo-ctrl-btn" style="flex: 2; color: #f1c40f; padding: 1rem; font-size: 0.95rem;" disabled>
+          <span>⏹ Finish</span>
+        </button>
+        <button id="btn-speedo-reset" class="icon-btn-sm" style="width: 48px; height: 48px; border-radius: 12px; margin: 0; flex-shrink: 0;" title="Reset Run">
+          <svg class="icon-xs"><use href="#icon-close"/></svg>
+        </button>
+      </div>
+
+      <!-- ACTIVE RECORDING STATUS CARD -->
+      <div id="speedo-active-session-card" class="speedo-card" style="display: none; padding: 0.85rem 1rem; margin-bottom: 1.25rem; background: rgba(46, 204, 113, 0.05); border-color: rgba(46, 204, 113, 0.25);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <div style="display:flex; align-items:center; gap: 6px;">
+            <span class="live-indicator-sm" style="padding: 2px 6px; font-size: 0.58rem;"><div class="pulse"></div> RECORDING SPEED</span>
+          </div>
+          <span id="speedo-live-timer" style="font-size: 1.1rem; font-weight: 800; font-family: monospace; color: var(--green);">00:00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: rgba(255,255,255,0.7); flex-wrap: wrap; gap: 4px;">
+          <span id="speedo-live-start-loc">Start: --</span>
+          <span id="speedo-live-start-time">Time: --</span>
+        </div>
+      </div>
+
+      <!-- SAVED SPEED RUNS LOGS -->
+      <div class="speedo-card" style="margin-bottom: 2rem;">
+        <div class="section-title-row" style="margin-bottom: 0.75rem;">
+          <div style="display:flex; align-items:center; gap: 6px;">
+            <svg class="icon-xs" style="fill: #f1c40f;"><use href="#icon-folder"/></svg>
+            <h3 class="section-title" style="margin: 0; font-size: 0.78rem;">Saved Speed Runs</h3>
+          </div>
+          <button id="btn-clear-speedo-logs" class="icon-btn-sm" style="margin:0; font-size: 0.65rem; width: auto; height: 26px; padding: 4px 8px;" title="Clear All Saved Runs">
+            <span>Clear</span>
+          </button>
+        </div>
+        <div id="speedo-saved-runs-list" class="card-scrollable-body" style="display: flex; flex-direction: column; gap: 0.6rem; max-height: 250px;">
+          <div style="text-align: center; padding: 1.5rem 0.5rem; color: rgba(255,255,255,0.35); font-size: 0.75rem;">No saved speed runs yet. Finished runs will appear here.</div>
+        </div>
+      </div>
+
+      <!-- Bottom return button -->
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <button class="btn-tertiary btn-back" data-target="other-menu"><span>← Back to Other Menu</span></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ COUNTIF DASHBOARD VIEW ============ -->
+  <main id="countif-view" class="view">
+    <div class="container container-medium">
+      <header class="view-header-row" style="margin-bottom: 2rem;">
+        <button class="icon-btn-sm btn-back" data-target="menu"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>CountIf Connect</h2>
+      </header>
+        <!-- VIEW 1: Connection Setup (Fallback only) -->
+        <div id="countif-setup" style="display:none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 class="section-title" style="margin: 0;">Connection Setup</h3>
+            <div id="countif-status-badge" class="status-badge" style="background: rgba(46,204,113,0.15); color: #2ecc71;">
+              <div class="status-dot" style="background:#2ecc71;"></div>
+              <span>Auto-Connected</span>
+            </div>
+          </div>
+
+          <!-- Status timeline -->
+          <div id="countif-timeline" style="margin-bottom: 1.5rem;">
+            <div class="countif-step complete" data-step="init">
+              <div class="countif-step-indicator"></div>
+              <div class="countif-step-content">
+                <span class="countif-step-label">Initialize</span>
+                <span class="countif-step-detail">Server auto-connected.</span>
+              </div>
+            </div>
+            <div class="countif-step complete" data-step="page_loaded">
+              <div class="countif-step-indicator"></div>
+              <div class="countif-step-content">
+                <span class="countif-step-label">Page Loaded</span>
+                <span class="countif-step-detail">Tokens managed by server.</span>
+              </div>
+            </div>
+            <div class="countif-step complete" data-step="tokens_harvested">
+              <div class="countif-step-indicator"></div>
+              <div class="countif-step-content">
+                <span class="countif-step-label">Tokens Acquired</span>
+                <span class="countif-step-detail">Persistent session active.</span>
+              </div>
+            </div>
+            <div class="countif-step complete" data-step="authenticated">
+              <div class="countif-step-indicator"></div>
+              <div class="countif-step-content">
+                <span class="countif-step-label">Authenticated</span>
+                <span class="countif-step-detail">Ready to search.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result card (For failures) -->
+          <div id="countif-result" style="display:none; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; text-align: center;">
+            <div id="countif-result-icon" style="font-size: 2rem; margin-bottom: 0.5rem;"></div>
+            <div id="countif-result-title" style="font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;"></div>
+            <div id="countif-result-msg" style="font-size: 0.75rem; opacity: 0.7;"></div>
+          </div>
+
+          <button id="btn-countif-connect" class="btn-primary full-width" style="margin-top: 0.5rem;">
+            <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-navigation"/></svg>
+            <span>Reconnect to Dispatch</span>
+            <div class="gloss-sheen"></div>
+          </button>
+        </div>
+
+        <!-- VIEW 2: Active Portal (Instant Default View) -->
+        <div id="countif-portal" style="display:block;">
+          <!-- Telemetry Stats (2 Metrics) -->
+          <div class="metrics-grid" style="margin-bottom: 1.2rem;">
+            <div class="metric-card">
+              <span class="metric-label">ACTIVE BUSES</span>
+              <span id="portal-results-count" class="metric-value" style="color:var(--green);">0</span>
+            </div>
+            <div class="metric-card" style="position: relative;">
+              <span class="metric-label">LAST SYNC</span>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <span id="portal-last-sync-time" class="metric-value" style="font-size:0.95rem; font-weight:700;">Just now</span>
+                <div id="portal-progress-ring-container" class="sync-quadrant-container" title="Click to view 4-step progress">
+                  <svg id="sync-quadrant-svg" class="sync-quadrant-svg" viewBox="0 0 36 36">
+                    <circle class="sync-quad-bg" cx="18" cy="18" r="14" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3.5" />
+                    <circle id="quad-seg-1" class="sync-quad-seg" cx="18" cy="18" r="14" fill="none" stroke-width="3.5" stroke-dasharray="22 66" stroke-dashoffset="22" />
+                    <circle id="quad-seg-2" class="sync-quad-seg" cx="18" cy="18" r="14" fill="none" stroke-width="3.5" stroke-dasharray="22 66" stroke-dashoffset="0" />
+                    <circle id="quad-seg-3" class="sync-quad-seg" cx="18" cy="18" r="14" fill="none" stroke-width="3.5" stroke-dasharray="22 66" stroke-dashoffset="-22" />
+                    <circle id="quad-seg-4" class="sync-quad-seg" cx="18" cy="18" r="14" fill="none" stroke-width="3.5" stroke-dasharray="22 66" stroke-dashoffset="-44" />
+                  </svg>
+                  <span id="sync-quad-icon" class="sync-quad-center-icon visible">✓</span>
+                </div>
+              </div>
+
+              <!-- Tooltip popup for the 4 steps -->
+              <div id="portal-step-tooltip" class="sync-step-tooltip" style="display: none;">
+                <div class="tooltip-step-row complete" data-step="1"><span class="step-dot">●</span> <span>1. Init Proxy</span></div>
+                <div class="tooltip-step-row complete" data-step="2"><span class="step-dot">●</span> <span>2. Auth Session</span></div>
+                <div class="tooltip-step-row complete" data-step="3"><span class="step-dot">●</span> <span>3. Scrape Records</span></div>
+                <div class="tooltip-step-row complete" data-step="4"><span class="step-dot">●</span> <span>4. Render Feed</span></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Inline Quick Filter Inputs (Full-width, responsive) -->
+          <div class="portal-quick-input-row">
+            <div class="portal-input-box">
+              <input type="text" id="portal-input-bus" placeholder="Filter by Bus # (e.g. 367)..." inputmode="numeric" />
+              <button id="btn-portal-filter-bus" class="portal-input-btn">Filter Bus</button>
+            </div>
+            <div class="portal-input-box">
+              <input type="text" id="portal-input-stop" placeholder="Filter by Stop # (e.g. 4)..." inputmode="numeric" />
+              <button id="btn-portal-filter-stop" class="portal-input-btn">Filter Stop</button>
+            </div>
+          </div>
+
+          <!-- Active Filter Pill Chip (1-Tap Clear) -->
+          <div id="portal-active-filter-badge" style="display:none; align-items:center; justify-content:space-between; margin-bottom:1rem; background:rgba(46,204,113,0.12); border:1px solid rgba(46,204,113,0.3); border-radius:10px; padding:6px 12px; font-size:0.75rem; color:#2ecc71;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span>Filtering:</span>
+              <strong id="portal-active-filter-text">Bus #367</strong>
+            </div>
+            <button id="btn-clear-portal-filter" style="background:rgba(255,255,255,0.1); border:none; color:#ecf0f1; border-radius:4px; font-weight:800; cursor:pointer; font-size:0.75rem; padding:2px 8px; display:flex; align-items:center; gap:4px;">
+              <span>Clear Filter</span>
+              <span>✕</span>
+            </button>
+          </div>
+
+          <button id="btn-portal-refresh" class="btn-primary full-width portal-action-btn btn-sync-idle" data-action="refresh" style="height: 48px; border-radius: 12px; margin-bottom:1.5rem; background:white; color:black; border:none; font-weight:800;">
+            <svg id="portal-refresh-icon" class="icon-sm" style="margin-right:8px; fill:black;"><use href="#icon-refresh"/></svg>
+            <span id="portal-refresh-text" style="color:black;">Sync</span>
+            <div class="gloss-sheen" style="background: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0.05), rgba(0,0,0,0));"></div>
+          </button>
+          
+          <div id="portal-sync-indicator" style="display: none; margin-top: -1rem; margin-bottom: 1.5rem; text-align: center;">
+            <div id="portal-sync-message" style="font-size: 0.7rem; color: var(--green); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.6rem;">Syncing Data...</div>
+            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; position: relative;">
+               <div id="portal-sync-progress" style="width: 30%; height: 100%; background: var(--green); position: absolute; left: -30%; border-radius: 2px; box-shadow: 0 0 10px var(--green);"></div>
+            </div>
+          </div>
+
+          <div id="portal-snapshot-area" style="display: none; background: #141414; background: rgba(24,24,24,0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.8rem; margin-bottom: 1.5rem;">
+            <div id="portal-snapshot-driver" style="display: none; font-size: 0.8rem; font-weight: 700; color: var(--green); margin-bottom: 0.4rem;">
+              <span style="opacity: 0.5; color: white;">Current Driver: </span><span id="snapshot-driver-val">---</span>
+            </div>
+            <div id="portal-snapshot-supervisor" style="display: none; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--green);">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="opacity: 0.5; color: white;">Current Supervisor: </span>
+                <span id="snapshot-supervisor-val">---</span>
+              </div>
+              <button id="btn-copy-snapshot-super" class="icon-btn-sm" style="margin: 0; background: rgba(255,255,255,0.05); border-radius: 6px; padding: 4px;">
+                <svg class="icon-xs" style="fill: var(--green);"><use href="#icon-clipboard"/></svg>
+              </button>
+            </div>
+          </div>
+          <!-- Results Display -->
+          <div id="portal-results-area" style="display:none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;">
+              <span class="section-title" style="font-size: 0.7rem; letter-spacing: 1.5px;">RECENT ENTRIES</span>
+              <span id="portal-filter-tag" style="font-size: 0.6rem; opacity: 0.4; text-transform: uppercase;"></span>
+            </div>
+            <div id="portal-results-list" style="display: flex; flex-direction: column; gap: 0.8rem; max-height: 340px; overflow-y: auto; padding-right: 4px;">
+              <!-- Dynamic Rows -->
+            </div>
+            <button id="btn-portal-toggle-all" class="violation-btn-sm" style="display:none; width:100%; height:34px; margin-top:0.8rem; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#ecf0f1; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer;">Show All Entries</button>
+          </div>
+
+          <button id="btn-countif-reconnect" class="btn-tertiary" style="margin-top: 1.5rem; width:100%; font-size:0.7rem; opacity:0.5;">
+            <span>Reset Connection</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ LIVE TRACKER VIEW ============ -->
+  <main id="tracker-view" class="view">
+    <div class="container container-medium">
+      <header class="view-header-row" style="margin-bottom: 2rem;">
+        <button class="icon-btn-sm btn-back" data-target="other-menu"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>Live Bus Tracker</h2>
+      </header>
+      <div class="liquid-glass-container" style="padding-top: 1rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; padding: 0 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h3 class="section-title" style="margin: 0;">Configuration</h3>
+            <button id="btn-mini-dispatch" class="violation-btn-sm" style="width: 32px; height: 24px; padding: 0; border-radius: 6px; background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.2); font-size: 0.65rem; font-weight: 800; color: var(--green); display: flex; align-items: center; justify-content: center;" title="Open Dispatch Report">
+              DR
+            </button>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div id="tracker-api-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4);">
+                <div class="status-dot"></div>
+                <span>Waiting...</span>
+              </div>
+              <button id="btn-samsara-logout" class="violation-btn-sm" style="display: none; height: 22px; padding: 0 8px; border-radius: 6px; background: rgba(231, 76, 60, 0.15); border: 1px solid rgba(231, 76, 60, 0.3); font-size: 0.65rem; font-weight: 700; color: #e74c3c; cursor: pointer; align-items: center; justify-content: center;" title="Sign Out of Samsara">
+                <span>Sign Out</span>
+              </button>
+            </div>
+            <div id="tracker-dispatch-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); font-size: 0.65rem; padding: 2px 8px;">
+              <div class="status-dot" style="width: 6px; height: 6px;"></div>
+              <span>Dispatch Idle</span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label style="font-size: 0.7rem; opacity: 0.6; margin-bottom: 4px; display: block;">Bus #</label>
+          <input type="number" id="tracker-bus-number" placeholder="e.g. 367" />
+        </div>
+        <div class="input-group" style="margin-top: 1rem;">
+          <label style="font-size: 0.7rem; opacity: 0.6; margin-bottom: 4px; display: block;">Stop #</label>
+          <input type="number" id="tracker-route-input" placeholder="e.g. 14 (Optional)" />
+        </div>
+        <button id="btn-show-all-buses" class="btn-secondary full-width" style="margin-top: 1rem; background: white; color: black; border: none; padding: 0.8rem; font-weight: 700;">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-bus"/></svg>
+          <span>Show All Busses</span>
+        </button>
+        <button id="btn-run-tracker" class="btn-primary full-width" style="margin-top: 0.5rem;">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-navigation"/></svg>
+          <span>Ping Dispatch</span>
+          <div class="gloss-sheen"></div>
+        </button>
+      </div>
+      <div id="tracker-results-container" style="display: none; margin-top: 1.5rem;">
+        <!-- Interactive Live Map (Leaflet) -->
+        <div id="tracker-map-display" style="width: 100%; height: 320px; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(0,0,0,0.1); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: #eee;">
+          <!-- Leaflet will mount here -->
+        </div>
+
+        <!-- Data Freshness & Address Metadata -->
+        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+             <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.6;">🛰️ Satellite Status</span>
+             <span id="tracker-active-time" style="font-size: 0.8rem; font-weight: 600; color: var(--accent);">--</span>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.8rem;">
+             <svg style="width:16px; height:16px; margin-top:2px; opacity:0.6;"><use xlink:href="#icon-navigation"></use></svg>
+             <span id="tracker-street-addr" style="font-size: 0.9rem; line-height: 1.4; opacity: 0.9;">Resolving location...</span>
+          </div>
+        </div>
+
+        <div class="stat-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="liquid-glass-container" style="padding: 1rem;">
+             <span class="stat-label">LAST STOP</span>
+             <span id="tracker-last-stop" class="stat-value" style="font-size: .85rem; color: var(--text-tertiary);">-</span>
+          </div>
+          <div class="liquid-glass-container" style="padding: 1rem; border: 1px solid rgba(46,204,113,0.3); background: rgba(46,204,113,0.05);">
+             <span class="stat-label" style="color: var(--green);">UPCOMING</span>
+             <span id="tracker-next-stop" class="stat-value" style="font-size: 1rem; color: var(--text-primary); font-weight: 800;">-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ LIBERTY CRUISE: DASHBOARD ============ -->
+  <main id="lc-dashboard-view" class="view modal-screen-view">
+    <div class="container container-medium card setup-modal-card">
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="reports-menu"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <div style="flex: 1;">
+          <h1 style="margin: 0; font-size: 1.5rem;">Liberty Cruise</h1>
+          <p class="subtitle" style="margin: 0; text-align: left; font-size: 0.85rem;">Cruise Violation Logging</p>
+        </div>
+      </header>
+      <div class="button-stack card-scrollable-body">
+        <button id="lc-btn-resume" class="btn-accent hidden">
+          <svg class="icon-sm"><use href="#icon-refresh"/></svg>
+          <span>Resume Active Report</span>
+        </button>
+        <button id="lc-btn-start-new" class="btn-primary">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-plus"/></svg>
+          <span>Start Report</span>
+          <div class="gloss-sheen"></div>
+        </button>
+        <button id="lc-btn-view-all" class="btn-secondary">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-folder"/></svg>
+          <span>Saved Reports</span>
+        </button>
+        <button class="btn-tertiary btn-back" data-target="reports-menu"><span>← Back to Menu</span></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ LIBERTY CRUISE: NEW SESSION ============ -->
+  <main id="lc-new-view" class="view modal-screen-view">
+    <div class="container container-medium card setup-modal-card">
+      <div class="gloss-sheen"></div>
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="lc-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>New Cruise Report</h2>
+      </header>
+      <div class="form-content card-scrollable-body">
+        <div class="input-group"><label for="lc-departure-time">Departure Time:</label><input type="text" id="lc-departure-time" readonly class="clickable-input" /></div>
+        <div class="input-group"><label for="lc-ticket-number">Ticket Number:</label><input type="text" id="lc-ticket-number" /></div>
+        <div class="input-group"><label for="lc-boat-name">Boat Name:</label><input type="text" id="lc-boat-name" /></div>
+        <div class="input-group"><label for="lc-supervisor-scanned">Supervisor That Scanned Ticket:</label><input type="text" id="lc-supervisor-scanned" /></div>
+      </div>
+      <footer class="card-pinned-footer">
+        <button id="lc-btn-confirm-start" class="btn-primary"><span>Start Report</span><div class="gloss-sheen"></div></button>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ============ LIBERTY CRUISE: LIVE SESSION ============ -->
+  <main id="lc-session-view" class="view session-view">
+    <div class="container container-large">
+      <div class="liquid-glass-container" style="margin-top:1rem;">
+        <div class="section-title-row">
+          <div style="display:flex; align-items:center;">
+             <button class="icon-btn-sm btn-back" style="margin-right:8px;" data-target="lc-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+             <h3 class="section-title" style="margin:0;">Cruise Info</h3>
+          </div>
+          <div class="header-tools">
+            <div class="live-indicator-sm"><span class="dot pulse"></span><span>LIVE</span></div>
+          </div>
+      </div>
+      <div style="margin-top: 1rem; position: relative;">
+        <svg class="icon-sm" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.4; pointer-events: none;"><use href="#icon-search"/></svg>
+        <input type="text" id="lc-checklist-search" placeholder="Search violations..." style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: white; font-size: 0.85rem; font-weight: 600; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" oninput="lcFilterChecklist(this.value)" />
+      </div>
+      <div id="lc-checklist-area" style="margin-top: 1rem;">
+        <!-- Checklist items rendered via JS -->
+      </div>
+      <div class="liquid-glass-container" style="margin-top: 1.5rem;">
+        <div class="section-title-wrapper" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+          <div style="display: flex; align-items: center; gap: 0.8rem;">
+            <h3 class="section-title" style="margin: 0;">Notes</h3>
+            <button class="violation-btn-sm note-btn" id="lc-btn-add-note" style="padding: 4px 12px; font-size: 0.75rem; height: 28px; background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.15); color:var(--accent);">Note +</button>
+          </div>
+          <span id="lc-notes-count" class="count-badge">0 notes</span>
+        </div>
+        <ul id="lc-notes-list" class="log-list"></ul>
+      </div>
+      <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; flex-direction: column; gap: 1rem;">
+        <button id="lc-btn-complete" class="btn-primary" style="height: 52px; border-radius: 14px; font-weight: 800; background: var(--green); color: black; border: none;">
+          <svg class="icon-sm" style="margin-right:8px; fill: black;"><use href="#icon-check"/></svg>
+          <span style="color: black;">Complete & Save Report</span>
+          <div class="gloss-sheen" style="background: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0.05), rgba(0,0,0,0));"></div>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ LIBERTY CRUISE: HISTORY ============ -->
+  <main id="lc-history-view" class="view modal-screen-view">
+    <div class="container container-large card setup-modal-card">
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="lc-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>Cruise Reports History</h2>
+      </header>
+      <div class="log-section card-scrollable-body">
+        <div class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Saved Cruise Reports</span></div>
+        <ul id="lc-saved-list" class="log-list"></ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ STOPWATCH: DASHBOARD ============ -->
+  <main id="sw-dashboard-view" class="view modal-screen-view">
+    <div class="container container-medium card setup-modal-card">
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="reports-menu"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <div style="flex: 1;">
+          <h1 id="sw-welcome" style="margin: 0; font-size: 1.5rem;">Stopwatch Reports</h1>
+          <p class="subtitle" style="margin: 0; text-align: left; font-size: 0.85rem;">Supervisor Inspection</p>
+        </div>
+      </header>
+      <div class="button-stack card-scrollable-body">
+        <button id="sw-btn-resume" class="btn-accent hidden">
+          <svg class="icon-sm"><use href="#icon-refresh"/></svg>
+          <span>Resume Active Report</span>
+        </button>
+        <button id="sw-btn-start-new" class="btn-primary">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-plus"/></svg>
+          <span>New Stopwatch</span>
+          <div class="gloss-sheen"></div>
+        </button>
+        <button id="sw-btn-view-all" class="btn-secondary">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-folder"/></svg>
+          <span>Saved Reports</span>
+        </button>
+        <button class="btn-tertiary btn-back" data-target="reports-menu"><span>← Back to Menu</span></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ STOPWATCH: NEW SESSION ============ -->
+  <main id="sw-new-view" class="view modal-screen-view">
+    <div class="container container-medium card setup-modal-card">
+      <div class="gloss-sheen"></div>
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="sw-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>New session</h2>
+      </header>
+      <div class="form-content card-scrollable-body">
+        <div class="input-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label for="sw-supervisor-name" style="margin:0;">Supervisor Name:</label>
+            <button type="button" id="sw-btn-autofill-sup" class="btn-form-autofill" title="Auto-fill supervisor from Dispatch">
+              <span>Dispatch</span>
+            </button>
+          </div>
+          <input type="text" id="sw-supervisor-name" placeholder="e.g. Supervisor Name" />
+        </div>
+        <div class="input-group"><label for="sw-stop-num">Stop #:</label><input type="text" id="sw-stop-num" /></div>
+        <div class="input-group"><label for="sw-time-started">Time Started:</label><input type="text" id="sw-time-started" readonly class="clickable-input" /></div>
+      </div>
+      <footer class="card-pinned-footer">
+        <button id="sw-btn-confirm-start" class="btn-primary"><span>Start Stopwatch</span><div class="gloss-sheen"></div></button>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ============ STOPWATCH: LIVE SESSION ============ -->
+  <main id="sw-session-view" class="view session-view">
+    <div class="container container-large">
+      <div class="liquid-glass-container" style="margin-top:1rem;">
+        <div class="section-title-row">
+          <div style="display:flex; align-items:center;">
+             <button class="icon-btn-sm btn-back" style="margin-right:8px;" data-target="sw-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+             <h3 class="section-title" style="margin:0;">Session Info</h3>
+          </div>
+          <div class="header-tools">
+            <button class="violation-btn-sm hud-shortcut" data-url="https://www.countif.net" title="Dispatch Portal" style="flex-shrink:0; height:28px; padding:0 10px; font-size:.7rem; margin:0; border-radius:6px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);">Dispatch</button>
+            <div class="live-indicator-sm"><span class="dot pulse"></span><span>LIVE</span></div>
+            <button id="sw-btn-global-notes" class="icon-tool-btn" title="Global Notes"><svg class="icon-xs"><use href="#icon-clipboard"/></svg></button>
+            <button id="sw-btn-edit-session" class="icon-tool-btn" title="Edit Session"><svg class="icon-xs"><use href="#icon-pencil"/></svg></button>
+          </div>
+        </div>
+        <div class="session-summary-bar">
+          <div class="stat-item-compact"><span class="stat-label">STOP:</span><span id="sw-session-stop" class="stat-value">-</span></div>
+          <div class="stat-item-compact"><span class="stat-label">SUP:</span><span id="sw-session-sup" class="stat-value">-</span></div>
+          <div class="stat-item-compact"><span class="stat-label">START:</span><span id="sw-session-start" class="stat-value">-</span></div>
+        </div>
+      </div>
+      <div class="liquid-glass-container">
+        <h3 class="section-title">Log Violation</h3>
+        <div class="violation-grid-compact" id="sw-violation-grid">
+          <button class="violation-btn-sm" data-type="Phone Usage">Phone Usage</button>
+          <button class="violation-btn-sm" data-type="Bus Dispatch">Bus Dispatch</button>
+          <button class="violation-btn-sm" data-type="Sitting Down">Sitting Down</button>
+          <button class="violation-btn-sm" data-type="Uniform">Uniform</button>
+          <button class="violation-btn-sm custom-btn" id="sw-btn-custom-violation">Custom +</button>
+          <button class="violation-btn-sm note-btn" id="sw-btn-add-note" style="background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.15); color:var(--accent);">Note +</button>
+        </div>
+      </div>
+      <div class="liquid-glass-container">
+        <div class="section-title-wrapper">
+          <h3 class="section-title">Violation Log</h3>
+          <span id="sw-violation-count" class="count-badge">0 logged</span>
+        </div>
+        <ul id="sw-violation-list" class="log-list"></ul>
+      </div>
+      <div class="liquid-glass-container">
+        <div class="section-title-wrapper">
+          <h3 class="section-title">Notes</h3>
+          <span id="sw-notes-count" class="count-badge">0 notes</span>
+        </div>
+        <ul id="sw-notes-list" class="log-list"></ul>
+      </div>
+      <div class="action-footer">
+        <button id="sw-btn-finish" class="btn-primary full-width">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-download"/></svg>
+          <span>End Session & Report</span>
+          <div class="gloss-sheen"></div>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ STOPWATCH: HISTORY ============ -->
+  <main id="sw-history-view" class="view modal-screen-view">
+    <div class="container container-large card setup-modal-card">
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="sw-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>Your Reports</h2>
+      </header>
+      <div class="log-section card-scrollable-body">
+        <div class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Inspection History</span></div>
+        <ul id="sw-saved-list" class="log-list"></ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FULL LOOP: DASHBOARD ============ -->
+  <main id="fl-dashboard-view" class="view modal-screen-view">
+    <div class="container container-medium card setup-modal-card">
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="reports-menu"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <div style="flex: 1;">
+          <h1 style="margin: 0; font-size: 1.5rem;">Full Loop Report</h1>
+          <p class="subtitle" style="margin: 0; text-align: left; font-size: 0.85rem;">Bus Violation Logging</p>
+        </div>
+      </header>
+      <div class="button-stack card-scrollable-body">
+        <button id="fl-btn-resume" class="btn-accent hidden">
+          <svg class="icon-sm"><use href="#icon-refresh"/></svg>
+          <span>Resume Last Report</span>
+        </button>
+        <button id="fl-btn-start-new" class="btn-primary">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-clipboard"/></svg>
+          <span>Start Report</span>
+          <div class="gloss-sheen"></div>
+        </button>
+        <button id="fl-btn-view-all" class="btn-secondary">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-folder"/></svg>
+          <span>Saved Reports</span>
+        </button>
+        <button class="btn-tertiary btn-back" data-target="reports-menu"><span>← Back to Menu</span></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FULL LOOP: NEW SESSION ============ -->
+  <main id="fl-new-view" class="view modal-screen-view">
+    <div class="container container-medium card setup-modal-card">
+      <div class="gloss-sheen"></div>
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="fl-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>New Report</h2>
+      </header>
+      <div class="form-content card-scrollable-body">
+        <div class="input-group"><label for="fl-bus-number">Bus Number:</label><input type="text" id="fl-bus-number" placeholder="e.g. 359" /></div>
+        <div class="input-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label for="fl-driver-name" style="margin:0;">Driver Name:</label>
+            <button type="button" id="fl-btn-autofill-driver" class="btn-form-autofill" title="Auto-fill driver for this bus from Dispatch">
+              <span>Dispatch</span>
+            </button>
+          </div>
+          <input type="text" id="fl-driver-name" placeholder="e.g. John Doe" />
+        </div>
+        <div class="input-group"><label for="fl-route">Route:</label><input type="text" id="fl-route" placeholder="e.g. downtown, uptown..." /></div>
+        <div class="input-group"><label for="fl-stop-boarded">Stop Boarded:</label><input type="text" id="fl-stop-boarded" placeholder="1, 2, 3..." /></div>
+        <div class="input-group"><label for="fl-time-started">Time On:</label><input type="text" id="fl-time-started" readonly class="clickable-input" /></div>
+      </div>
+      <footer class="card-pinned-footer">
+        <button id="fl-btn-confirm-start" class="btn-primary"><span>Start Session</span><div class="gloss-sheen"></div></button>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ============ FULL LOOP: LIVE SESSION ============ -->
+  <main id="fl-session-view" class="view session-view">
+    <div class="container container-large">
+      <div class="liquid-glass-container" style="margin-top:1rem;">
+        <div class="section-title-row">
+          <div style="display:flex; align-items:center;">
+             <button class="icon-btn-sm btn-back" style="margin-right:8px;" data-target="fl-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+             <h3 class="section-title" style="margin:0;">Bus Details</h3>
+          </div>
+          <div class="header-tools">
+            <button class="violation-btn-sm hud-shortcut" data-url="https://www.countif.net" title="Dispatch Portal" style="flex-shrink:0; height:28px; padding:0 10px; font-size:.7rem; margin:0; border-radius:6px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);">Dispatch</button>
+            <div class="live-indicator-sm"><span class="dot pulse"></span><span>LIVE</span></div>
+            <button id="fl-btn-global-notes" class="icon-tool-btn" title="Global Notes"><svg class="icon-xs"><use href="#icon-clipboard"/></svg></button>
+            <button id="fl-btn-edit-session" class="icon-tool-btn" title="Edit Session"><svg class="icon-xs"><use href="#icon-pencil"/></svg></button>
+          </div>
+        </div>
+        <div class="session-summary-bar">
+          <div class="stat-item-compact"><span class="stat-label">BUS:</span><span id="fl-session-bus" class="stat-value">-</span></div>
+          <div class="stat-item-compact"><span class="stat-label">DRIVER:</span><span id="fl-session-driver" class="stat-value">-</span></div>
+          <div class="stat-item-compact"><span class="stat-label">ROUTE:</span><span id="fl-session-route" class="stat-value">-</span></div>
+          <div class="stat-item-compact"><span class="stat-label">START:</span><span id="fl-session-start" class="stat-value">-</span></div>
+        </div>
+        <button id="fl-btn-driver-change" style="margin-top:.5rem;padding:.3rem .6rem;font-size:.7rem;color:#a0a0a0;background:none;border:none;text-decoration:underline;text-underline-offset:3px;">Driver Changed?</button>
+      </div>
+      <div class="liquid-glass-container">
+        <h3 class="section-title">Tap to Log Violation</h3>
+        <div class="violation-grid-compact" id="fl-violation-grid">
+          <button class="violation-btn-sm" data-type="Customer standing while bus in motion">Standing in motion</button>
+          <button class="violation-btn-sm" data-type="Ran red">Ran red</button>
+          <button class="violation-btn-sm" data-type="Excessive Honking">Excessive Honking</button>
+          <button class="violation-btn-sm" data-type="Uniform">Uniform</button>
+          <button class="violation-btn-sm" data-type="Took off while customers standing">Took off standing</button>
+          <button class="violation-btn-sm" data-type="Skipped Stop">Skipped Stop</button>
+          <button class="violation-btn-sm custom-btn" id="fl-btn-custom-violation">Custom +</button>
+          <button class="violation-btn-sm note-btn" id="fl-btn-add-note" style="background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.15); color:var(--accent);">Note +</button>
+        </div>
+      </div>
+      <div class="liquid-glass-container">
+        <div class="section-title-wrapper">
+          <h3 class="section-title">Session Log</h3>
+          <span id="fl-violation-count" class="count-badge">0 logged</span>
+        </div>
+        <ul id="fl-violation-list" class="log-list"></ul>
+      </div>
+      <div class="liquid-glass-container">
+        <div class="section-title-wrapper">
+          <h3 class="section-title">Notes</h3>
+          <span id="fl-notes-count" class="count-badge">0 notes</span>
+        </div>
+        <ul id="fl-notes-list" class="log-list"></ul>
+      </div>
+      <div class="action-footer">
+        <button id="fl-btn-finish" class="btn-primary full-width">
+          <svg class="icon-sm" style="margin-right:8px;"><use href="#icon-download"/></svg>
+          <span>End Session & Report</span>
+          <div class="gloss-sheen"></div>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ FULL LOOP: HISTORY ============ -->
+  <main id="fl-history-view" class="view modal-screen-view">
+    <div class="container container-large card setup-modal-card">
+      <header class="view-header-row card-pinned-header">
+        <button class="icon-btn-sm btn-back" data-target="fl-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h2>Reports</h2>
+      </header>
+      <div class="log-section card-scrollable-body">
+        <div class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Report History</span></div>
+        <ul id="fl-saved-list" class="log-list"></ul>
+      </div>
+    </div>
+  </main>
+
+
+
+  <!-- ============ SHARED MODALS ============ -->
+
+  <!-- Custom Violation Modal -->
+  <div id="custom-violation-modal" class="modal-overlay">
+    <div class="modal card">
+      <header class="modal-header"><h3>Custom Violation</h3></header>
+      <div class="input-group"><label for="custom-violation-input">Violation Description</label><input type="text" id="custom-violation-input" placeholder="Type here..." /></div>
+      <div class="modal-actions">
+        <button id="btn-cancel-custom" class="btn-secondary">Cancel</button>
+        <button id="btn-save-custom" class="btn-primary">Add Violation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div id="confirm-modal" class="modal-overlay">
+    <div class="modal card">
+      <header class="modal-header">
+        <h3 id="confirm-modal-title">Warning</h3>
+        <p id="confirm-modal-message" class="subtitle" style="margin-bottom:0;">You already have an active report, Proceed</p>
+      </header>
+      <div class="modal-actions">
+        <button id="btn-confirm-no" class="btn-secondary">No</button>
+        <button id="btn-confirm-yes" class="btn-primary">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Notes Modal -->
+  <div id="global-notes-modal" class="modal-overlay">
+    <div class="modal card">
+      <header class="modal-header">
+        <h3>Global Notes</h3>
+        <p class="subtitle" style="margin-bottom:0;">These notes will transfer to your next report</p>
+      </header>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <span style="font-size:0.9rem;font-weight:600;">Saved Notes</span>
+        <button id="btn-open-global-block-input" class="btn-tertiary" style="padding:0.3rem 0.6rem;font-size:0.8rem;">+ New Note</button>
+      </div>
+
+      <div id="global-block-input-container" style="display:none; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.1); padding:0.8rem; border-radius:8px; background:rgba(0,0,0,0.2);">
+        <textarea id="global-block-input" placeholder="Type note here... (Press Enter or Return to add)" enterkeyhint="send" rows="3" style="width:100%; border:none; background:transparent; color:#fff; outline:none; resize:vertical; margin-bottom:0.5rem; font-size:0.9rem;"></textarea>
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+          <button id="btn-cancel-global-block" class="btn-secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Cancel</button>
+          <button id="btn-add-global-block" class="btn-primary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Add</button>
+        </div>
+      </div>
+
+      <ul id="global-block-list" class="log-list card-scrollable-body" style="max-height: 250px; overflow-y: auto; margin-bottom: 1rem;"></ul>
+
+      <div class="modal-actions">
+        <button id="btn-close-global-notes" class="btn-primary" style="width: 100%;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Modal -->
+  <div id="note-modal" class="modal-overlay">
+    <div class="modal card">
+      <header class="modal-header"><h3>Add Note</h3><p class="subtitle" style="margin-bottom:0;">This will appear in the Notes section of your report</p></header>
+      <div class="input-group"><label for="note-input">Note</label><textarea id="note-input" placeholder="Type your note... (Press Enter or Return to add)" enterkeyhint="send" rows="3"></textarea></div>
+      <div class="modal-actions">
+        <button id="btn-cancel-note" class="btn-secondary">Cancel</button>
+        <button id="btn-save-note" class="btn-primary">Add Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Violation Detail Modal -->
+  <div id="violation-detail-modal" class="modal-overlay">
+    <div class="modal card">
+      <header class="modal-header">
+        <h3 id="detail-modal-title">Log Violation</h3>
+        <p id="detail-modal-subtitle" class="subtitle" style="margin-bottom:0;">Add notes or adjust time</p>
+      </header>
+      <div class="input-group-row">
+        <div class="input-group"><label for="detail-time-input">Time</label><input type="text" id="detail-time-input" readonly class="clickable-input" /></div>
+      </div>
+      <div id="multiple-minutes-options" style="display:none; margin-bottom:1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;margin-bottom:0.5rem;"><input type="checkbox" id="check-multiple-minutes" style="width:1.2rem;height:1.2rem;"> <span>Multiple Minutes?</span></label>
+        <div id="end-time-group" class="input-group" style="display:none;"><label for="detail-end-time-input">End Time</label><input type="text" id="detail-end-time-input" readonly class="clickable-input" placeholder="Select end time" /></div>
+      </div>
+      <div id="skipped-stop-options" class="input-group" style="display:none; margin-bottom:1rem;">
+        <label for="detail-stop-num-input">Stop #</label>
+        <input type="text" id="detail-stop-num-input" placeholder='e.g. "4" or "#4" (auto-adds Stop)' />
+      </div>
+      <div id="bus-dispatch-options" class="input-group-row" style="display:none;gap:1rem;margin-bottom:1rem;">
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="check-late" style="width:1.2rem;height:1.2rem;"> <span>Late</span></label>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="check-no-input" style="width:1.2rem;height:1.2rem;"> <span>Didn't Input</span></label>
+      </div>
+      <div class="input-group"><label for="detail-notes-input" id="detail-notes-label">Notes (Optional)</label><textarea id="detail-notes-input" placeholder="Type here..." rows="2"></textarea></div>
+      <div id="standing-action-options" style="display:none; margin-bottom:1rem;">
+        <div style="font-size:0.75rem; opacity:0.5; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.6rem;">Action Status</div>
+        <div style="display:flex; gap:1rem; margin-bottom:0.5rem;">
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="radio-no-action" style="width:1.2rem;height:1.2rem;"> <span>No Action Taken</span></label>
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="radio-action-taken" style="width:1.2rem;height:1.2rem;"> <span>Action Taken</span></label>
+        </div>
+        <div id="action-desc-group" style="display:none; margin-bottom:0.5rem;">
+          <div class="input-group"><label for="action-description-input">Describe Action</label><input type="text" id="action-description-input" placeholder="e.g. Told passengers to sit down" /></div>
+        </div>
+        <div style="font-size:0.75rem; opacity:0.5; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.6rem; margin-top:0.5rem;">Video?</div>
+        <div style="display:flex; gap:1rem;">
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="check-has-video" style="width:1.2rem;height:1.2rem;"> <span>Yes</span></label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-cancel-detail" class="btn-secondary">Cancel</button>
+        <button id="btn-save-detail" class="btn-primary">Save Violation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Session Modal (shared) -->
+  <div id="edit-session-modal" class="modal-overlay">
+    <div class="modal card">
+      <header class="modal-header"><h3>Edit Session Details</h3></header>
+      <div id="edit-session-fields"></div>
+      <div class="modal-actions">
+        <button id="btn-cancel-edit-session" class="btn-secondary">Cancel</button>
+        <button id="btn-save-edit-session" class="btn-primary">Update Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Driver Change Modal -->
+  <div id="driver-change-modal" class="modal-overlay">
+    <div class="modal card">
+      <header class="modal-header"><h3>Change Driver</h3><p class="subtitle" style="margin-bottom:0;">Enter the new driver's name</p></header>
+      <div class="input-group"><label for="new-driver-input">Driver Name</label><input type="text" id="new-driver-input" placeholder="Enter driver name" /></div>
+      <div class="modal-actions">
+        <button id="btn-cancel-driver-change" class="btn-secondary">Cancel</button>
+        <button id="btn-save-driver-change" class="btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Picker Modal -->
+  <div id="time-picker-modal" class="modal-overlay">
+    <div class="modal card time-picker-card">
+      <header class="modal-header">
+        <h3>Select Time</h3>
+        <p class="subtitle" style="margin-bottom:0;">Scroll to select</p>
+      </header>
+      <div class="time-picker-body">
+        <div class="time-column" id="picker-hour-col"></div>
+        <div class="time-column" id="picker-minute-col"></div>
+        <div class="time-column" id="picker-ampm-col">
+          <div class="time-option" data-val="AM">AM</div>
+          <div class="time-option" data-val="PM">PM</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-cancel-picker" class="btn-secondary">Cancel</button>
+        <button id="btn-save-picker" class="btn-primary">Set Time</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Missing Fields Confirmation Modal -->
+  <div id="missing-fields-modal" class="modal-overlay">
+    <div class="modal card" style="max-width: 380px; text-align: center; padding: 2rem 1.5rem;">
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(243, 156, 18, 0.15); border: 1px solid rgba(243, 156, 18, 0.4); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; color: #f39c12;">
+        <svg style="width:24px; height:24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h3 style="margin: 0 0 0.8rem; font-size: 1.1rem; color: white;">Missing Fields, Proceed Anyway?</h3>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 1.8rem; line-height: 1.4;">Some fields or checklist items have not been answered.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+        <button id="btn-missing-fields-yes" class="btn-primary" style="height: 44px; justify-content: center;">Yes</button>
+        <button id="btn-missing-fields-no" class="btn-secondary" style="height: 44px; justify-content: center;">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Viewer Modal -->
+  <div id="report-viewer-modal" class="modal-overlay">
+    <div class="modal card report-viewer-card">
+      <header class="modal-header" style="justify-content: flex-start; gap: 0.5rem;">
+        <button id="btn-close-report-viewer-top" class="icon-btn-sm btn-back" style="margin: 0;"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <h3 id="report-viewer-title" style="margin: 0;">Report</h3>
+      </header>
+      <div id="report-viewer-body" class="report-viewer-body" style="margin-bottom: 1rem;"></div>
+      <div class="report-viewer-actions-top" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1rem;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.4rem;">
+          <button id="btn-copy-all-report" class="btn-copy-all" style="padding:0.4rem; justify-content:center; text-align:center;">
+            <svg class="icon-sm" style="margin-right:2px;"><use href="#icon-clipboard"/></svg>
+            <span style="font-size:.65rem;">Copy All</span>
+          </button>
+          <button id="btn-share-report" class="btn-secondary" style="padding:0.4rem; border-radius:8px; font-weight:700; display:flex; justify-content:center; align-items:center;">
+            <svg class="icon-xs" style="margin-right:4px;"><use href="#icon-share"/></svg>
+            <span style="font-size:.65rem;">AirDrop / Export</span>
+          </button>
+          <button id="btn-download-txt-report" class="btn-secondary" style="padding:0.4rem; border-radius:8px; font-weight:700; display:flex; justify-content:center; align-items:center;">
+            <svg class="icon-xs" style="margin-right:4px;"><use href="#icon-folder"/></svg>
+            <span style="font-size:.65rem;">Save .txt</span>
+          </button>
+        </div>
+        <div id="report-viewer-forms" style="display:flex; gap:0.5rem; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:0.5rem; border-radius:12px;">
+          <span style="font-size:.6rem; color:var(--text-tertiary); font-weight:700; text-transform:uppercase; writing-mode:vertical-rl; text-orientation:mixed; transform:rotate(180deg);">Open Form</span>
+          <button id="dynamic-form-btn" class="violation-btn-sm hud-shortcut" style="height:38px; font-size:.75rem; font-weight:800; flex:1;" data-url="https://docs.google.com/forms/d/e/1FAIpQLSd0zU3h4U-FJwYhm5WCInVypOJ38dHn_0CTJDlzO7acnXhNAQ/viewform">Cruise Form</button>
+        </div>
+      </div>
+      <div class="modal-actions" style="grid-template-columns:1fr;">
+        <button id="btn-close-report-viewer" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FLOATING DISPATCH PILL (Toggle Open/Close) ============ -->
+  <div id="floating-dispatch-pill" title="Toggle Integrated Dispatch">
+    <div id="floating-dispatch-dot" class="status-dot" style="background: var(--green); width: 8px; height: 8px; margin: 0;"></div>
+    <span id="floating-dispatch-text">📡 Dispatch</span>
+  </div>
+
+  <!-- ============ INTEGRATED DISPATCH OVERLAY MODAL ============ -->
+  <div id="dispatch-overlay-modal" class="modal-overlay">
+    <div class="modal card" style="max-width: 520px; width: 95%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; position: relative;">
+      <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 1.1rem; font-weight: 800;">CountIf Dispatch Portal</span>
+          <span class="status-badge" style="background: rgba(46, 204, 113, 0.2); color: #2ecc71; font-size: 0.65rem; padding: 2px 6px;">Integrated</span>
+          <button id="btn-open-dispatch-logs" class="btn-terminal-badge" title="Open Live Activity Logs">
+            <span>&gt;_ Logs</span>
+          </button>
+        </div>
+        <button id="btn-close-dispatch-overlay" class="icon-btn-sm" style="margin: 0;"><svg class="icon-xs"><use href="#icon-close"/></svg></button>
+      </header>
+      <div id="dispatch-overlay-body" style="min-height: 150px;"></div>
+    </div>
+  </div>
+
+  <!-- ============ LIVE ACTIVITY LOGS DRAWER (Slide-Up) ============ -->
+  <div id="dispatch-logs-backdrop" class="logs-drawer-backdrop" style="display:none;"></div>
+  <div id="dispatch-logs-drawer" class="dispatch-logs-drawer">
+    <div class="logs-drawer-handle-bar"></div>
+    <div class="logs-drawer-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-family:monospace; font-weight:800; color:#2ecc71; font-size:0.85rem;">&gt;_ Live Activity Terminal</span>
+        <span id="logs-status-indicator" class="status-dot" style="background:#2ecc71; width:6px; height:6px;"></span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button id="btn-clear-dispatch-logs" class="btn-clear-logs" title="Clear All Logs">Clear All</button>
+        <button id="btn-close-dispatch-logs" class="icon-btn-sm" style="width:24px; height:24px; padding:0;"><svg class="icon-xs"><use href="#icon-close"/></svg></button>
+      </div>
+    </div>
+    <div id="dispatch-terminal-body" class="dispatch-terminal-body">
+      <!-- Live logs appear here -->
+    </div>
+  </div>
+
+  <!-- ============ IN-APP BROWSER & LIVE OVERLAY ============ -->
+  <div id="inapp-browser-modal" class="modal-overlay" style="padding: 0; z-index: 10000; align-items: stretch; justify-content: stretch;">
+    <div class="inapp-browser-container" style="display: flex; flex-direction: column; width: 100%; height: 100%; background: #0e131a; position: relative;">
+      
+      <!-- Top Navigation & Address Bar Row -->
+      <header class="inapp-browser-nav">
+        <button id="btn-browser-back" class="inapp-nav-btn" title="Back"><svg class="icon-xs"><use href="#icon-chevron-left"/></svg></button>
+        <button id="btn-browser-forward" class="inapp-nav-btn" title="Forward"><svg class="icon-xs"><use href="#icon-chevron-right"/></svg></button>
+        <button id="btn-browser-reload" class="inapp-nav-btn" title="Reload"><svg class="icon-xs"><use href="#icon-sync"/></svg></button>
+        
+        <!-- Address Bar Input -->
+        <div class="inapp-address-bar">
+          <span style="font-size: 0.85rem; opacity: 0.7;">🌐</span>
+          <input type="text" id="inapp-url-input" value="" placeholder="Enter website URL (e.g. samsara.com, wikipedia.org)" />
+          <button id="btn-browser-go" class="btn-inapp-go">Go</button>
+        </div>
+
+        <!-- Connection / Status Badge -->
+        <div id="inapp-browser-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); font-size: 0.7rem; padding: 4px 10px; height: 34px; display: inline-flex; align-items: center;">
+          <div class="status-dot"></div>
+          <span id="inapp-status-text">Ready</span>
+        </div>
+
+        <!-- Toggle Overlay HUD Button -->
+        <button id="btn-toggle-overlay-hud" class="inapp-nav-btn" title="Toggle Live Overlay HUD" style="background: rgba(46, 204, 113, 0.15); color: #2ecc71; border-color: rgba(46, 204, 113, 0.3);">
+          <span>📌</span>
+        </button>
+
+        <!-- Close / Minimize Modal Button -->
+        <button id="btn-close-inapp-browser" class="inapp-nav-btn" title="Close"><svg class="icon-xs"><use href="#icon-close"/></svg></button>
+      </header>
+
+      <!-- Quick Bookmarks Bar -->
+      <div id="inapp-quick-links" class="inapp-quick-bar">
+        <span style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px;">Quick Links:</span>
+        <button class="btn-quick-url" data-url="https://cloud.samsara.com/signin">🛰️ Samsara</button>
+        <button class="btn-quick-url" data-url="https://google.com">🔍 Google</button>
+        <button class="btn-quick-url" data-url="https://wikipedia.org">📚 Wikipedia</button>
+        <button class="btn-quick-url" data-url="https://example.com">🌐 Example.com</button>
+      </div>
+
+      <!-- Main Browser Viewport Frame -->
+      <div id="inapp-browser-viewport" style="flex: 1; width: 100%; height: 100%; position: relative; background: #0a0e14; overflow: hidden;">
+        <iframe id="inapp-webview-frame" src="about:blank" style="width: 100%; height: 100%; border: none; background: #ffffff;" allow="geolocation; camera; microphone"></iframe>
+        
+        <!-- Live Floating Telemetry HUD Overlay -->
+        <div id="live-telemetry-hud" class="floating-hud-overlay" style="position: absolute; bottom: 20px; left: 20px; right: 20px; max-width: 480px; margin: 0 auto; background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; backdrop-filter: blur(24px); box-shadow: 0 16px 40px rgba(0,0,0,0.6); padding: 14px 18px; z-index: 50; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="live-pulse-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e74c3c; animation: pulseRed 1.5s infinite;"></span>
+              <span style="font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px; color: #ecf0f1; text-transform: uppercase;">Live Telemetry Overlay</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span id="hud-active-buses-badge" class="status-badge" style="background: rgba(46, 204, 113, 0.2); color: #2ecc71; font-size: 0.65rem; padding: 2px 8px;">0 Buses Active</span>
+              <button id="btn-hud-collapse" class="icon-btn-sm" style="width: 20px; height: 20px; padding: 0; opacity: 0.7;">—</button>
+            </div>
+          </div>
+
+          <div id="hud-content-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
+            <div style="background: rgba(0,0,0,0.35); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+              <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase;">Closest Bus</div>
+              <div id="hud-closest-bus-val" style="font-size: 1rem; font-weight: 800; color: var(--accent); margin-top: 2px;">--</div>
+              <div id="hud-driver-val" style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">No Driver</div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.35); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+              <div style="font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase;">Next Stop Prediction</div>
+              <div id="hud-next-stop-val" style="font-size: 0.95rem; font-weight: 700; color: #2ecc71; margin-top: 2px;">Stop --</div>
+              <div id="hud-distance-val" style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 1px;">-- meters away</div>
+            </div>
+          </div>
+
+          <!-- Bottom Actions inside HUD -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-size: 0.65rem; color: var(--text-tertiary);" id="hud-last-sync-time">Last update: Live</div>
+            <div style="display: flex; gap: 6px;">
+              <button id="btn-hud-sync-now" class="violation-btn-sm" style="height: 22px; padding: 0 8px; font-size: 0.65rem; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15); border-radius: 4px; cursor: pointer;">🔄 Sync</button>
+              <button id="btn-hud-open-map" class="violation-btn-sm" style="height: 22px; padding: 0 8px; font-size: 0.65rem; background: var(--accent); color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer;">🗺️ View Map</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal: Send Speed Note to Report -->
+<div id="speedo-send-modal" class="modal-overlay">
+  <div class="modal-card card setup-modal-card" style="max-width: 360px; max-height: min(88dvh, 540px); background: #121820; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 1.25rem;">
+    <div class="modal-header card-pinned-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+      <h3 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin:0;">Send Note to Report</h3>
+      <button id="btn-close-speedo-modal" class="icon-btn-sm" style="margin:0;"><svg class="icon-xs"><use href="#icon-close"/></svg></button>
+    </div>
+    <div class="card-scrollable-body">
+      <div id="speedo-send-modal-preview" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 0.75rem; font-size: 0.72rem; color: #2ecc71; font-family: monospace; word-break: break-all; margin-bottom: 1rem;">
+        <!-- preview note -->
+      </div>
+      <div style="font-size: 0.72rem; color: rgba(255,255,255,0.6); margin-bottom: 0.6rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">
+        Attach note to:
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.6rem; margin-bottom: 0.5rem;">
+        <button class="btn-primary btn-attach-speed-report" data-target-report="fl" style="justify-content: flex-start; gap: 10px; font-size: 0.85rem;">
+          <svg class="icon-sm" style="fill: var(--green);"><use href="#icon-bus"/></svg>
+          <span>Full Loop Report</span>
+        </button>
+        <button class="btn-primary btn-attach-speed-report" data-target-report="sw" style="justify-content: flex-start; gap: 10px; font-size: 0.85rem;">
+          <svg class="icon-sm" style="fill: var(--green);"><use href="#icon-stopwatch"/></svg>
+          <span>Stopwatch Report</span>
+        </button>
+        <button class="btn-primary btn-attach-speed-report" data-target-report="lc" style="justify-content: flex-start; gap: 10px; font-size: 0.85rem;">
+          <svg class="icon-sm" style="fill: var(--green);"><use href="#icon-boat"/></svg>
+          <span>Liberty Cruise Report</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Toast Notification -->
+<div id="portal-copy-toast" class="portal-copy-toast">✓ Copied to Clipboard</div>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
