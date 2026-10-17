@@ -35,6 +35,7 @@ const State = {
     session: { inspector:'', supervisor:'', stopNum:'', startTime:null, endTime:null, violations:[], notes:[] },
     editingViolationIndex: null,
     editingSavedReportIndex: null,
+    activeFolderIndex: null,
     savedReports: []
   },
   // Full Loop state
@@ -42,12 +43,15 @@ const State = {
     session: { inspector:'', busNumber:'', driverName:'', route:'', stopBoarded:'', startTime:null, endTime:null, violations:[], notes:[] },
     editingViolationIndex: null,
     editingSavedReportIndex: null,
+    activeFolderIndex: null,
     savedReports: [],
     drivers: [] // {driverName, lastReportDate}
   },
   // Liberty Cruise state
   lc: {
     session: null,
+    editingSavedReportIndex: null,
+    activeFolderIndex: null,
     savedReports: []
   },
   timePickerCallback: null
@@ -94,6 +98,96 @@ const formatDisplayTime = (date) => {
   return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
 };
 const daysBetween = (d1, d2) => Math.floor(Math.abs(d2-d1) / (1000*60*60*24));
+
+// ===== REPORT FOLDER GROUPING HELPERS (125 REPORTS PER FOLDER) =====
+const REPORT_FOLDER_CAPACITY = 125;
+
+function getReportTimestampMs(r, fallbackOrder = 0) {
+  if (!r) return fallbackOrder;
+  const numId = Number(r.id);
+  if (!isNaN(numId) && numId > 1000000000000) {
+    return numId;
+  }
+  if (r.timestamp) {
+    const parsedTs = Date.parse(r.timestamp);
+    if (!isNaN(parsedTs)) return parsedTs;
+  }
+  if (r.date) {
+    const parsedDate = Date.parse(r.date);
+    if (!isNaN(parsedDate)) return parsedDate;
+  }
+  return fallbackOrder;
+}
+
+function formatNumericReportDate(r) {
+  if (!r) return 'Unknown Date';
+  if (r.date && /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(r.date.trim())) {
+    return r.date.trim();
+  }
+  if (r.timestamp) {
+    const datePart = String(r.timestamp).split(',')[0].trim();
+    if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(datePart)) {
+      return datePart;
+    }
+    const d = new Date(r.timestamp);
+    if (!isNaN(d.getTime())) {
+      return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+    }
+  }
+  if (r.date) {
+    const d = new Date(r.date);
+    if (!isNaN(d.getTime())) {
+      return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+    }
+    return String(r.date).trim();
+  }
+  const numId = Number(r.id);
+  if (!isNaN(numId) && numId > 1000000000000) {
+    const d = new Date(numId);
+    return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+  }
+  const now = new Date();
+  return `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+}
+
+/**
+ * Groups reports chronologically from earliest to latest into folders of 125 reports.
+ * Each folder is named "start date - end date" based on the earliest and latest report in that chunk.
+ */
+function buildReportFolders(reports, capacity = REPORT_FOLDER_CAPACITY) {
+  if (!Array.isArray(reports) || reports.length === 0) return [];
+  // Pair each report with its original array position (higher index = older in unshifted arrays)
+  const indexed = reports.map((report, idx) => ({
+    report,
+    origIdx: idx,
+    ts: getReportTimestampMs(report, reports.length - idx)
+  }));
+  // Sort earliest (oldest) to latest (newest)
+  indexed.sort((a, b) => {
+    if (a.ts !== b.ts) return a.ts - b.ts;
+    return b.origIdx - a.origIdx;
+  });
+
+  const folders = [];
+  for (let i = 0; i < indexed.length; i += capacity) {
+    const chunk = indexed.slice(i, i + capacity).map(item => item.report);
+    const earliest = chunk[0];
+    const latest = chunk[chunk.length - 1];
+    const startDate = formatNumericReportDate(earliest);
+    const endDate = formatNumericReportDate(latest);
+    folders.push({
+      folderIndex: folders.length,
+      folderNumber: folders.length + 1,
+      name: `${startDate} - ${endDate}`,
+      startDate,
+      endDate,
+      count: chunk.length,
+      // Display newest-first inside the folder while keeping chunk boundaries earliest-to-latest
+      reports: [...chunk].reverse()
+    });
+  }
+  return folders;
+}
 
 async function copyToClipboard(text, btnElement) {
   try {
@@ -228,9 +322,26 @@ function showView(targetId) {
   }
 }
 
-// Back buttons
+// Back buttons (folder-aware for history views)
 document.querySelectorAll('.btn-back').forEach(btn => {
-  btn.addEventListener('click', () => showView(btn.dataset.target));
+  btn.addEventListener('click', () => {
+    if (btn.id === 'sw-history-back-btn' && State.sw.activeFolderIndex !== null) {
+      State.sw.activeFolderIndex = null;
+      swRenderHistory();
+      return;
+    }
+    if (btn.id === 'fl-history-back-btn' && State.fl.activeFolderIndex !== null) {
+      State.fl.activeFolderIndex = null;
+      flRenderHistory();
+      return;
+    }
+    if (btn.id === 'lc-history-back-btn' && State.lc.activeFolderIndex !== null) {
+      State.lc.activeFolderIndex = null;
+      lcRenderHistory();
+      return;
+    }
+    showView(btn.dataset.target);
+  });
 });
 
 // Bubble ring navigation click delegation
@@ -2493,33 +2604,38 @@ document.getElementById('btn-download-txt-report').addEventListener('click', () 
   }
 });
 
-// External Form and URL opener with multi-tier fallback (Capacitor Browser, Native Anchor, Window Open)
+// External Form and URL opener — always opens in the device's default external browser tab (never in-app popup sheet)
 function openExternalForm(url) {
   if (!url) return;
   if (url.includes('countif.net')) {
     if (typeof openDispatchOverlayModal === 'function') openDispatchOverlayModal();
     return;
   }
-  // Try Capacitor Browser if in native app
-  if (window.Capacitor?.Plugins?.Browser?.open) {
-    try {
-      window.Capacitor.Plugins.Browser.open({ url });
-      return;
-    } catch (e) {
-      console.warn("Capacitor Browser open failed, falling back to web navigation:", e);
-    }
+  // Never use Capacitor.Plugins.Browser.open here because @capacitor/browser opens an in-app modal popup sheet (SFSafariViewController / Custom Tabs).
+  // Instead, use AppLauncher if available or a standard target="_blank" anchor click, which Capacitor's WebViewDelegationHandler routes to UIApplication.shared.open (default system browser tab).
+  if (window.Capacitor?.Plugins?.AppLauncher?.openUrl) {
+    window.Capacitor.Plugins.AppLauncher.openUrl({ url }).catch(() => {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+    return;
   }
-  // Web fallback: click temporary anchor to bypass popup blockers
   try {
     const a = document.createElement('a');
     a.href = url;
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
+    a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   } catch (err) {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, '_blank');
   }
 }
 window.openExternalForm = openExternalForm;
@@ -2534,10 +2650,8 @@ document.querySelectorAll('.hud-shortcut').forEach(btn => {
       if (typeof openDispatchOverlayModal === 'function') openDispatchOverlayModal();
       return;
     }
-    if (btn.tagName === 'BUTTON') {
-      e.preventDefault();
-      openExternalForm(url);
-    }
+    e.preventDefault();
+    openExternalForm(url);
   });
 });
 
@@ -2708,7 +2822,7 @@ document.getElementById('sw-btn-start-new').addEventListener('click', () => {
 });
 
 document.getElementById('sw-btn-resume').addEventListener('click', () => { swUpdateDisplay(); swRenderLog(); swRenderNotes(); showView('sw-session'); });
-document.getElementById('sw-btn-view-all').addEventListener('click', () => { swRenderHistory(); showView('sw-history'); });
+document.getElementById('sw-btn-view-all').addEventListener('click', () => { State.sw.activeFolderIndex = null; swRenderHistory(); showView('sw-history'); });
 
 // Time input click
 document.getElementById('sw-time-started').addEventListener('click', () => {
@@ -2875,15 +2989,85 @@ function swSaveReport(session) {
 
 function swRenderHistory() {
   const list = document.getElementById('sw-saved-list');
+  const headerEl = document.getElementById('sw-folder-header');
+  if (!list) return;
   list.innerHTML = '';
   const mine = State.sw.savedReports.filter(r => r.inspector === State.currentUser);
-  if (mine.length === 0) { list.innerHTML = `<li class="subtitle" style="text-align:center;padding:2rem;">No reports found.</li>`; return; }
-  mine.forEach(r => {
+  if (mine.length === 0) {
+    State.sw.activeFolderIndex = null;
+    if (headerEl) {
+      headerEl.innerHTML = `<div class="folder-header-left"><svg class="icon"><use href="#icon-folder"/></svg><span>Report Folders</span></div><span class="folder-count-badge">0 reports</span>`;
+    }
+    list.innerHTML = `<li class="subtitle" style="text-align:center;padding:2rem;">No reports found.</li>`;
+    return;
+  }
+
+  const folders = buildReportFolders(mine, REPORT_FOLDER_CAPACITY);
+  if (State.sw.activeFolderIndex !== null && !folders[State.sw.activeFolderIndex]) {
+    State.sw.activeFolderIndex = null;
+  }
+
+  // Drill-down: Show folders list first
+  if (State.sw.activeFolderIndex === null) {
+    if (headerEl) {
+      headerEl.innerHTML = `
+        <div class="folder-header-left">
+          <svg class="icon"><use href="#icon-folder"/></svg>
+          <span>Report Folders (${folders.length})</span>
+        </div>
+        <span class="folder-count-badge">${mine.length} report${mine.length !== 1 ? 's' : ''}</span>
+      `;
+    }
+    [...folders].reverse().forEach(folder => {
+      const li = document.createElement('li');
+      li.className = 'report-folder-item';
+      li.innerHTML = `
+        <div class="report-folder-left">
+          <div class="report-folder-icon">
+            <svg class="icon"><use href="#icon-folder"/></svg>
+          </div>
+          <div class="report-folder-info">
+            <span class="report-folder-title">${folder.name}</span>
+            <span class="report-folder-sub">Folder ${folder.folderNumber} • Earliest to Latest (${REPORT_FOLDER_CAPACITY} max)</span>
+          </div>
+        </div>
+        <div class="report-folder-right">
+          <span class="folder-count-badge">${folder.count} report${folder.count !== 1 ? 's' : ''}</span>
+          <svg class="icon-sm" style="opacity:0.6;"><use href="#icon-chevron-right"/></svg>
+        </div>
+      `;
+      li.onclick = () => {
+        State.sw.activeFolderIndex = folder.folderIndex;
+        swRenderHistory();
+      };
+      list.appendChild(li);
+    });
+    return;
+  }
+
+  // Inside selected folder: render reports
+  const activeFolder = folders[State.sw.activeFolderIndex];
+  if (headerEl) {
+    headerEl.innerHTML = `
+      <div class="folder-header-left">
+        <button type="button" class="folder-back-btn" id="sw-folder-back-btn">← Folders</button>
+        <span style="font-weight:700; color:var(--text-primary); text-transform:none; letter-spacing:0;">${activeFolder.name}</span>
+      </div>
+      <span class="folder-count-badge">${activeFolder.count} report${activeFolder.count !== 1 ? 's' : ''}</span>
+    `;
+    document.getElementById('sw-folder-back-btn')?.addEventListener('click', () => {
+      State.sw.activeFolderIndex = null;
+      swRenderHistory();
+    });
+  }
+
+  activeFolder.reports.forEach(r => {
     const globalIdx = State.sw.savedReports.indexOf(r);
+    const displayDate = formatNumericReportDate(r);
     const li = document.createElement('li');
     li.className = 'log-item';
     li.style.cursor = 'pointer';
-    li.innerHTML = `<div class="log-content"><span class="type">${r.supervisor}</span><span class="log-notes">Stop #${r.stopNum} • ${r.date}</span></div><div class="log-meta"><button class="icon-btn-sm sw-view-btn" title="View Report"><svg class="icon-sm"><use href="#icon-clipboard"/></svg></button><button class="icon-btn-sm sw-edit-btn" title="Edit"><svg class="icon-sm"><use href="#icon-pencil"/></svg></button><button class="icon-btn-sm sw-del-report-btn" title="Delete"><svg class="icon-sm"><use href="#icon-trash"/></svg></button></div>`;
+    li.innerHTML = `<div class="log-content"><span class="type">${r.supervisor}</span><span class="log-notes">Stop #${r.stopNum} • ${displayDate}</span></div><div class="log-meta"><button class="icon-btn-sm sw-view-btn" title="View Report"><svg class="icon-sm"><use href="#icon-clipboard"/></svg></button><button class="icon-btn-sm sw-edit-btn" title="Edit"><svg class="icon-sm"><use href="#icon-pencil"/></svg></button><button class="icon-btn-sm sw-del-report-btn" title="Delete"><svg class="icon-sm"><use href="#icon-trash"/></svg></button></div>`;
     const openViewer = () => openReportViewer(swGenerateReport(r), `${r.supervisor} — Stop #${r.stopNum}`);
     li.querySelector('.sw-view-btn').onclick = (e) => { e.stopPropagation(); openViewer(); };
     li.querySelector('.log-content').onclick = openViewer;
@@ -2891,7 +3075,7 @@ function swRenderHistory() {
       e.stopPropagation();
       State.sw.session = JSON.parse(JSON.stringify(r));
       State.sw.editingSavedReportIndex = globalIdx;
-      swUpdateDisplay(); swRenderLog(); showView('sw-session');
+      swUpdateDisplay(); swRenderLog(); swRenderNotes(); showView('sw-session');
     };
     li.querySelector('.sw-del-report-btn').onclick = (e) => {
       e.stopPropagation();
@@ -2946,7 +3130,7 @@ document.getElementById('fl-btn-start-new').addEventListener('click', () => {
   }
 });
 document.getElementById('fl-btn-resume').addEventListener('click', () => { flUpdateDisplay(); flRenderLog(); flRenderNotes(); showView('fl-session'); });
-document.getElementById('fl-btn-view-all').addEventListener('click', () => { flRenderHistory(); showView('fl-history'); });
+document.getElementById('fl-btn-view-all').addEventListener('click', () => { State.fl.activeFolderIndex = null; flRenderHistory(); showView('fl-history'); });
 
 document.getElementById('fl-time-started').addEventListener('click', () => {
   openTimePicker(document.getElementById('fl-time-started').value, v => document.getElementById('fl-time-started').value = v);
@@ -3182,15 +3366,85 @@ function flSaveReport(session) {
 
 function flRenderHistory() {
   const list = document.getElementById('fl-saved-list');
+  const headerEl = document.getElementById('fl-folder-header');
+  if (!list) return;
   list.innerHTML = '';
   const mine = State.fl.savedReports.filter(r => r.inspector === State.currentUser);
-  if (mine.length === 0) { list.innerHTML = `<li class="subtitle" style="text-align:center;padding:2rem;">No reports found.</li>`; return; }
-  mine.forEach(r => {
+  if (mine.length === 0) {
+    State.fl.activeFolderIndex = null;
+    if (headerEl) {
+      headerEl.innerHTML = `<div class="folder-header-left"><svg class="icon"><use href="#icon-folder"/></svg><span>Report Folders</span></div><span class="folder-count-badge">0 reports</span>`;
+    }
+    list.innerHTML = `<li class="subtitle" style="text-align:center;padding:2rem;">No reports found.</li>`;
+    return;
+  }
+
+  const folders = buildReportFolders(mine, REPORT_FOLDER_CAPACITY);
+  if (State.fl.activeFolderIndex !== null && !folders[State.fl.activeFolderIndex]) {
+    State.fl.activeFolderIndex = null;
+  }
+
+  // Drill-down: Show folders list first
+  if (State.fl.activeFolderIndex === null) {
+    if (headerEl) {
+      headerEl.innerHTML = `
+        <div class="folder-header-left">
+          <svg class="icon"><use href="#icon-folder"/></svg>
+          <span>Report Folders (${folders.length})</span>
+        </div>
+        <span class="folder-count-badge">${mine.length} report${mine.length !== 1 ? 's' : ''}</span>
+      `;
+    }
+    [...folders].reverse().forEach(folder => {
+      const li = document.createElement('li');
+      li.className = 'report-folder-item';
+      li.innerHTML = `
+        <div class="report-folder-left">
+          <div class="report-folder-icon">
+            <svg class="icon"><use href="#icon-folder"/></svg>
+          </div>
+          <div class="report-folder-info">
+            <span class="report-folder-title">${folder.name}</span>
+            <span class="report-folder-sub">Folder ${folder.folderNumber} • Earliest to Latest (${REPORT_FOLDER_CAPACITY} max)</span>
+          </div>
+        </div>
+        <div class="report-folder-right">
+          <span class="folder-count-badge">${folder.count} report${folder.count !== 1 ? 's' : ''}</span>
+          <svg class="icon-sm" style="opacity:0.6;"><use href="#icon-chevron-right"/></svg>
+        </div>
+      `;
+      li.onclick = () => {
+        State.fl.activeFolderIndex = folder.folderIndex;
+        flRenderHistory();
+      };
+      list.appendChild(li);
+    });
+    return;
+  }
+
+  // Inside selected folder: render reports
+  const activeFolder = folders[State.fl.activeFolderIndex];
+  if (headerEl) {
+    headerEl.innerHTML = `
+      <div class="folder-header-left">
+        <button type="button" class="folder-back-btn" id="fl-folder-back-btn">← Folders</button>
+        <span style="font-weight:700; color:var(--text-primary); text-transform:none; letter-spacing:0;">${activeFolder.name}</span>
+      </div>
+      <span class="folder-count-badge">${activeFolder.count} report${activeFolder.count !== 1 ? 's' : ''}</span>
+    `;
+    document.getElementById('fl-folder-back-btn')?.addEventListener('click', () => {
+      State.fl.activeFolderIndex = null;
+      flRenderHistory();
+    });
+  }
+
+  activeFolder.reports.forEach(r => {
     const globalIdx = State.fl.savedReports.indexOf(r);
+    const displayDate = formatNumericReportDate(r);
     const li = document.createElement('li');
     li.className = 'log-item';
     li.style.cursor = 'pointer';
-    li.innerHTML = `<div class="log-content"><span class="type">Bus ${r.busNumber} - ${r.route || 'No route'}</span><span class="log-notes">${r.driverName} • ${r.date}</span></div><div class="log-meta"><button class="icon-btn-sm fl-view-btn" title="View Report"><svg class="icon-sm"><use href="#icon-clipboard"/></svg></button><button class="icon-btn-sm fl-edit-btn" title="Edit"><svg class="icon-sm"><use href="#icon-pencil"/></svg></button><button class="icon-btn-sm fl-del-report-btn" title="Delete"><svg class="icon-sm"><use href="#icon-trash"/></svg></button></div>`;
+    li.innerHTML = `<div class="log-content"><span class="type">Bus ${r.busNumber} - ${r.route || 'No route'}</span><span class="log-notes">${r.driverName} • ${displayDate}</span></div><div class="log-meta"><button class="icon-btn-sm fl-view-btn" title="View Report"><svg class="icon-sm"><use href="#icon-clipboard"/></svg></button><button class="icon-btn-sm fl-edit-btn" title="Edit"><svg class="icon-sm"><use href="#icon-pencil"/></svg></button><button class="icon-btn-sm fl-del-report-btn" title="Delete"><svg class="icon-sm"><use href="#icon-trash"/></svg></button></div>`;
     const openViewer = () => openReportViewer(flGenerateReport(r), `Bus ${r.busNumber} — ${r.driverName}`);
     li.querySelector('.fl-view-btn').onclick = (e) => { e.stopPropagation(); openViewer(); };
     li.querySelector('.log-content').onclick = openViewer;
@@ -3198,7 +3452,7 @@ function flRenderHistory() {
       e.stopPropagation();
       State.fl.session = JSON.parse(JSON.stringify(r));
       State.fl.editingSavedReportIndex = globalIdx;
-      flUpdateDisplay(); flRenderLog(); showView('fl-session');
+      flUpdateDisplay(); flRenderLog(); flRenderNotes(); showView('fl-session');
     };
     li.querySelector('.fl-del-report-btn').onclick = (e) => {
       e.stopPropagation();
@@ -3339,7 +3593,14 @@ if (radioNoAction && radioActionTaken) {
     if (radioNoAction.checked) { radioActionTaken.checked = false; actionDescGroup.style.display = 'none'; }
   });
   radioActionTaken.addEventListener('change', () => {
-    if (radioActionTaken.checked) { radioNoAction.checked = false; actionDescGroup.style.display = 'block'; setTimeout(() => actionDescInput.focus(), 100); }
+    if (radioActionTaken.checked) {
+      radioNoAction.checked = false;
+      actionDescGroup.style.display = 'block';
+      setTimeout(() => {
+        actionDescGroup.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        actionDescInput.focus();
+      }, 100);
+    }
   });
 }
 
@@ -3418,16 +3679,24 @@ function openViolationDetail(mod, type, editIdx = null) {
 
   detailModal.classList.add('active');
   detailModal.dataset.currentType = type;
+  const scrollBody = detailModal.querySelector('.modal-scrollable-body');
+  if (scrollBody) scrollBody.scrollTop = 0;
   setTimeout(() => detailNotes.focus(), 100);
 }
 
 detailTime.addEventListener('click', () => openTimePicker(detailTime.value, v => detailTime.value = v));
 
 document.getElementById('check-multiple-minutes').addEventListener('change', (e) => {
-  document.getElementById('end-time-group').style.display = e.target.checked ? 'block' : 'none';
+  const endGroup = document.getElementById('end-time-group');
+  endGroup.style.display = e.target.checked ? 'block' : 'none';
   document.querySelector('label[for="detail-time-input"]').textContent = e.target.checked ? 'Start Time' : 'Time';
-  if (e.target.checked && !document.getElementById('detail-end-time-input').value) {
-    document.getElementById('detail-end-time-input').value = formatTime();
+  if (e.target.checked) {
+    if (!document.getElementById('detail-end-time-input').value) {
+      document.getElementById('detail-end-time-input').value = formatTime();
+    }
+    setTimeout(() => {
+      endGroup.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 60);
   }
 });
 document.getElementById('detail-end-time-input').addEventListener('click', () => {
@@ -3513,6 +3782,7 @@ function openEditSessionModal(mod) {
       <div class="input-group"><label>Time On:</label><input type="text" id="edit-f-time" value="${s.startTime}" readonly class="clickable-input" /></div>`;
     setTimeout(() => document.getElementById('edit-f-time').addEventListener('click', () => openTimePicker(document.getElementById('edit-f-time').value, v => document.getElementById('edit-f-time').value = v)), 50);
   }
+  editFields.scrollTop = 0;
   editModal.classList.add('active');
 }
 
@@ -4066,21 +4336,88 @@ CHECKLIST
 
 function lcRenderHistory() {
   const list = document.getElementById('lc-saved-list');
+  const headerEl = document.getElementById('lc-folder-header');
   if (!list) return;
   list.innerHTML = '';
   const reports = State.lc.savedReports || [];
   if (reports.length === 0) {
+    State.lc.activeFolderIndex = null;
+    if (headerEl) {
+      headerEl.innerHTML = `<div class="folder-header-left"><svg class="icon"><use href="#icon-folder"/></svg><span>Report Folders</span></div><span class="folder-count-badge">0 reports</span>`;
+    }
     list.innerHTML = `<li class="subtitle" style="text-align:center;padding:2rem;">No saved cruise reports found.</li>`;
     return;
   }
-  reports.forEach((r, idx) => {
+
+  const folders = buildReportFolders(reports, REPORT_FOLDER_CAPACITY);
+  if (State.lc.activeFolderIndex !== null && !folders[State.lc.activeFolderIndex]) {
+    State.lc.activeFolderIndex = null;
+  }
+
+  // Drill-down: Show folders list first
+  if (State.lc.activeFolderIndex === null) {
+    if (headerEl) {
+      headerEl.innerHTML = `
+        <div class="folder-header-left">
+          <svg class="icon"><use href="#icon-folder"/></svg>
+          <span>Report Folders (${folders.length})</span>
+        </div>
+        <span class="folder-count-badge">${reports.length} report${reports.length !== 1 ? 's' : ''}</span>
+      `;
+    }
+    [...folders].reverse().forEach(folder => {
+      const li = document.createElement('li');
+      li.className = 'report-folder-item';
+      li.innerHTML = `
+        <div class="report-folder-left">
+          <div class="report-folder-icon">
+            <svg class="icon"><use href="#icon-folder"/></svg>
+          </div>
+          <div class="report-folder-info">
+            <span class="report-folder-title">${folder.name}</span>
+            <span class="report-folder-sub">Folder ${folder.folderNumber} • Earliest to Latest (${REPORT_FOLDER_CAPACITY} max)</span>
+          </div>
+        </div>
+        <div class="report-folder-right">
+          <span class="folder-count-badge">${folder.count} report${folder.count !== 1 ? 's' : ''}</span>
+          <svg class="icon-sm" style="opacity:0.6;"><use href="#icon-chevron-right"/></svg>
+        </div>
+      `;
+      li.onclick = () => {
+        State.lc.activeFolderIndex = folder.folderIndex;
+        lcRenderHistory();
+      };
+      list.appendChild(li);
+    });
+    return;
+  }
+
+  // Inside selected folder: render reports
+  const activeFolder = folders[State.lc.activeFolderIndex];
+  if (headerEl) {
+    headerEl.innerHTML = `
+      <div class="folder-header-left">
+        <button type="button" class="folder-back-btn" id="lc-folder-back-btn">← Folders</button>
+        <span style="font-weight:700; color:var(--text-primary); text-transform:none; letter-spacing:0;">${activeFolder.name}</span>
+      </div>
+      <span class="folder-count-badge">${activeFolder.count} report${activeFolder.count !== 1 ? 's' : ''}</span>
+    `;
+    document.getElementById('lc-folder-back-btn')?.addEventListener('click', () => {
+      State.lc.activeFolderIndex = null;
+      lcRenderHistory();
+    });
+  }
+
+  activeFolder.reports.forEach(r => {
+    const globalIdx = State.lc.savedReports.indexOf(r);
+    const displayDate = formatNumericReportDate(r);
     const li = document.createElement('li');
     li.className = 'log-item';
     li.style.cursor = 'pointer';
     li.innerHTML = `
       <div class="log-content">
         <span class="type">${r.boat || 'Liberty Cruise'}</span>
-        <span class="log-notes">Ticket #${r.ticket || '-'} • Depart: ${r.depart || '-'}</span>
+        <span class="log-notes">Ticket #${r.ticket || '-'} • Depart: ${r.depart || '-'} • ${displayDate}</span>
       </div>
       <div class="log-meta">
         <button class="icon-btn-sm lc-view-btn" title="View Report"><svg class="icon-sm"><use href="#icon-clipboard"/></svg></button>
@@ -4105,7 +4442,7 @@ function lcRenderHistory() {
         items: r.items ? JSON.parse(JSON.stringify(r.items)) : {},
         notes: r.notes ? JSON.parse(JSON.stringify(r.notes)) : []
       };
-      State.lc.editingSavedReportIndex = idx;
+      State.lc.editingSavedReportIndex = globalIdx;
       lcRenderChecklist();
       lcRenderNotes();
       showView('lc-session');
@@ -4113,7 +4450,7 @@ function lcRenderHistory() {
     li.querySelector('.lc-del-btn').onclick = (e) => {
       e.stopPropagation();
       if (confirm('Delete this cruise report?')) {
-        State.lc.savedReports.splice(idx, 1);
+        State.lc.savedReports.splice(globalIdx, 1);
         localStorage.setItem(KEYS.LC_REPORTS, JSON.stringify(State.lc.savedReports));
         updateStorageCount();
         lcRenderHistory();
@@ -4161,6 +4498,7 @@ document.getElementById('lc-departure-time')?.addEventListener('click', () => {
 });
 
 document.getElementById('lc-btn-view-all')?.addEventListener('click', () => {
+  State.lc.activeFolderIndex = null;
   lcRenderHistory();
   showView('lc-history');
 });
@@ -4232,6 +4570,7 @@ function lcFinalizeAndSaveReport(returnTime) {
   
   const savedReportObj = {
     id: State.lc.session.id || Date.now().toString(),
+    date: State.lc.session.date || new Date().toLocaleDateString(),
     timestamp: new Date().toLocaleString(),
     depart: State.lc.session.depart,
     returnTime: State.lc.session.returnTime,

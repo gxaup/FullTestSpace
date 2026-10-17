@@ -210,27 +210,33 @@
         </div>
       </div>
 
-      <!-- FORMS: Quad ring (opens the Google Forms) -->
+      <!-- FORMS: 5-bubble ring (opens the Google Forms in default browser) -->
       <div class="ring" data-ring="forms">
-        <div class="slot" style="--x:-0.2828; --y:-0.2828; --i:0">
+        <div class="slot" style="--x:0; --y:-0.4; --i:0">
           <a class="bubble tone-mono hud-shortcut" href="https://docs.google.com/forms/d/e/1FAIpQLSdlcMExtKCdKrDjad4B4Rq1y4phVHG5nSJhY_seBxKgbQBSYw/viewform" data-url="https://docs.google.com/forms/d/e/1FAIpQLSdlcMExtKCdKrDjad4B4Rq1y4phVHG5nSJhY_seBxKgbQBSYw/viewform" target="_blank" rel="noopener noreferrer" aria-label="Stopwatch Form">
             <svg class="bubble-glyph"><use href="#icon-stopwatch"/></svg>
             <span class="bubble-label">Stopwatch</span>
           </a>
         </div>
-        <div class="slot" style="--x:0.2828; --y:-0.2828; --i:1">
+        <div class="slot" style="--x:0.3804; --y:-0.1236; --i:1">
           <a class="bubble tone-mono hud-shortcut" href="https://docs.google.com/forms/d/e/1FAIpQLSfc97vaKGcC6Ijdjer5fyQ2M3qN93scHiBGDRWtD_gYhU1ROw/viewform" data-url="https://docs.google.com/forms/d/e/1FAIpQLSfc97vaKGcC6Ijdjer5fyQ2M3qN93scHiBGDRWtD_gYhU1ROw/viewform" target="_blank" rel="noopener noreferrer" aria-label="Full Loop Form">
             <svg class="bubble-glyph"><use href="#icon-bus"/></svg>
             <span class="bubble-label">Full Loop</span>
           </a>
         </div>
-        <div class="slot" style="--x:-0.2828; --y:0.2828; --i:2">
+        <div class="slot" style="--x:-0.3804; --y:-0.1236; --i:2">
+          <a class="bubble tone-mono hud-shortcut" href="https://docs.google.com/forms/d/e/1FAIpQLSd0zU3h4U-FJwYhm5WCInVypOJ38dHn_0CTJDlzO7acnXhNAQ/viewform" data-url="https://docs.google.com/forms/d/e/1FAIpQLSd0zU3h4U-FJwYhm5WCInVypOJ38dHn_0CTJDlzO7acnXhNAQ/viewform" target="_blank" rel="noopener noreferrer" aria-label="Liberty Cruise Form">
+            <svg class="bubble-glyph"><use href="#icon-boat"/></svg>
+            <span class="bubble-label">Liberty<br>Cruise</span>
+          </a>
+        </div>
+        <div class="slot" style="--x:-0.2351; --y:0.3236; --i:3">
           <a class="bubble tone-mono hud-shortcut" href="https://docs.google.com/forms/d/e/1FAIpQLScBb6QmvpC1LcDZnxf8IKMP388XwmDMJCF811M1kx1TOkmcwA/viewform" data-url="https://docs.google.com/forms/d/e/1FAIpQLScBb6QmvpC1LcDZnxf8IKMP388XwmDMJCF811M1kx1TOkmcwA/viewform" target="_blank" rel="noopener noreferrer" aria-label="Night Tour Form">
             <svg class="bubble-glyph"><use href="#icon-moon"/></svg>
             <span class="bubble-label">Night Tour</span>
           </a>
         </div>
-        <div class="slot" style="--x:0.2828; --y:0.2828; --i:3">
+        <div class="slot" style="--x:0.2351; --y:0.3236; --i:4">
           <button class="bubble tone-silver" data-ring-go="main" aria-label="Back to Menu">
             <svg class="bubble-glyph"><use href="#icon-arrow-back"/></svg>
             <span class="bubble-label">Menu</span>
@@ -746,13 +752,14 @@
           <div class="header-tools">
             <div class="live-indicator-sm"><span class="dot pulse"></span><span>LIVE</span></div>
           </div>
-      </div>
-      <div style="margin-top: 1rem; position: relative;">
-        <svg class="icon-sm" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.4; pointer-events: none;"><use href="#icon-search"/></svg>
-        <input type="text" id="lc-checklist-search" placeholder="Search violations..." style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: white; font-size: 0.85rem; font-weight: 600; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" oninput="lcFilterChecklist(this.value)" />
-      </div>
-      <div id="lc-checklist-area" style="margin-top: 1rem;">
-        <!-- Checklist items rendered via JS -->
+        </div>
+        <div style="margin-top: 1rem; position: relative;">
+          <svg class="icon-sm" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.4; pointer-events: none;"><use href="#icon-search"/></svg>
+          <input type="text" id="lc-checklist-search" placeholder="Search violations..." style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: white; font-size: 0.85rem; font-weight: 600; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" oninput="lcFilterChecklist(this.value)" />
+        </div>
+        <div id="lc-checklist-area" style="margin-top: 1rem;">
+          <!-- Checklist items rendered via JS -->
+        </div>
       </div>
       <div class="liquid-glass-container" style="margin-top: 1.5rem;">
         <div class="section-title-wrapper" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
@@ -778,11 +785,11 @@
   <main id="lc-history-view" class="view modal-screen-view">
     <div class="container container-large card setup-modal-card">
       <header class="view-header-row card-pinned-header">
-        <button class="icon-btn-sm btn-back" data-target="lc-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <button class="icon-btn-sm btn-back" id="lc-history-back-btn" data-target="lc-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
         <h2>Cruise Reports History</h2>
       </header>
       <div class="log-section card-scrollable-body">
-        <div class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Saved Cruise Reports</span></div>
+        <div id="lc-folder-header" class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Report Folders</span></div>
         <ul id="lc-saved-list" class="log-list"></ul>
       </div>
     </div>
@@ -905,11 +912,11 @@
   <main id="sw-history-view" class="view modal-screen-view">
     <div class="container container-large card setup-modal-card">
       <header class="view-header-row card-pinned-header">
-        <button class="icon-btn-sm btn-back" data-target="sw-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <button class="icon-btn-sm btn-back" id="sw-history-back-btn" data-target="sw-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
         <h2>Your Reports</h2>
       </header>
       <div class="log-section card-scrollable-body">
-        <div class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Inspection History</span></div>
+        <div id="sw-folder-header" class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Report Folders</span></div>
         <ul id="sw-saved-list" class="log-list"></ul>
       </div>
     </div>
@@ -1038,11 +1045,11 @@
   <main id="fl-history-view" class="view modal-screen-view">
     <div class="container container-large card setup-modal-card">
       <header class="view-header-row card-pinned-header">
-        <button class="icon-btn-sm btn-back" data-target="fl-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
+        <button class="icon-btn-sm btn-back" id="fl-history-back-btn" data-target="fl-dashboard"><svg class="icon"><use href="#icon-chevron-left"/></svg></button>
         <h2>Reports</h2>
       </header>
       <div class="log-section card-scrollable-body">
-        <div class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Report History</span></div>
+        <div id="fl-folder-header" class="folder-header"><svg class="icon-sm"><use href="#icon-folder"/></svg><span>Report Folders</span></div>
         <ul id="fl-saved-list" class="log-list"></ul>
       </div>
     </div>
@@ -1056,7 +1063,9 @@
   <div id="custom-violation-modal" class="modal-overlay">
     <div class="modal card">
       <header class="modal-header"><h3>Custom Violation</h3></header>
-      <div class="input-group"><label for="custom-violation-input">Violation Description</label><input type="text" id="custom-violation-input" placeholder="Type here..." /></div>
+      <div class="modal-scrollable-body card-scrollable-body">
+        <div class="input-group"><label for="custom-violation-input">Violation Description</label><input type="text" id="custom-violation-input" placeholder="Type here..." /></div>
+      </div>
       <div class="modal-actions">
         <button id="btn-cancel-custom" class="btn-secondary">Cancel</button>
         <button id="btn-save-custom" class="btn-primary">Add Violation</button>
@@ -1085,22 +1094,24 @@
         <h3>Global Notes</h3>
         <p class="subtitle" style="margin-bottom:0;">These notes will transfer to your next report</p>
       </header>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <span style="font-size:0.9rem;font-weight:600;">Saved Notes</span>
-        <button id="btn-open-global-block-input" class="btn-tertiary" style="padding:0.3rem 0.6rem;font-size:0.8rem;">+ New Note</button>
-      </div>
-
-      <div id="global-block-input-container" style="display:none; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.1); padding:0.8rem; border-radius:8px; background:rgba(0,0,0,0.2);">
-        <textarea id="global-block-input" placeholder="Type note here... (Press Enter or Return to add)" enterkeyhint="send" rows="3" style="width:100%; border:none; background:transparent; color:#fff; outline:none; resize:vertical; margin-bottom:0.5rem; font-size:0.9rem;"></textarea>
-        <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
-          <button id="btn-cancel-global-block" class="btn-secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Cancel</button>
-          <button id="btn-add-global-block" class="btn-primary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Add</button>
+      <div class="modal-scrollable-body card-scrollable-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <span style="font-size:0.9rem;font-weight:600;">Saved Notes</span>
+          <button id="btn-open-global-block-input" class="btn-tertiary" style="padding:0.3rem 0.6rem;font-size:0.8rem;margin-top:0;">+ New Note</button>
         </div>
+
+        <div id="global-block-input-container" style="display:none; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.1); padding:0.8rem; border-radius:8px; background:rgba(0,0,0,0.2);">
+          <textarea id="global-block-input" placeholder="Type note here... (Press Enter or Return to add)" enterkeyhint="send" rows="3" style="width:100%; border:none; background:transparent; color:#fff; outline:none; resize:vertical; margin-bottom:0.5rem; font-size:0.9rem;"></textarea>
+          <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+            <button id="btn-cancel-global-block" class="btn-secondary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Cancel</button>
+            <button id="btn-add-global-block" class="btn-primary" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Add</button>
+          </div>
+        </div>
+
+        <ul id="global-block-list" class="log-list" style="margin-bottom: 1rem;"></ul>
       </div>
 
-      <ul id="global-block-list" class="log-list card-scrollable-body" style="max-height: 250px; overflow-y: auto; margin-bottom: 1rem;"></ul>
-
-      <div class="modal-actions">
+      <div class="modal-actions" style="grid-template-columns:1fr;">
         <button id="btn-close-global-notes" class="btn-primary" style="width: 100%;">Close</button>
       </div>
     </div>
@@ -1110,7 +1121,9 @@
   <div id="note-modal" class="modal-overlay">
     <div class="modal card">
       <header class="modal-header"><h3>Add Note</h3><p class="subtitle" style="margin-bottom:0;">This will appear in the Notes section of your report</p></header>
-      <div class="input-group"><label for="note-input">Note</label><textarea id="note-input" placeholder="Type your note... (Press Enter or Return to add)" enterkeyhint="send" rows="3"></textarea></div>
+      <div class="modal-scrollable-body card-scrollable-body">
+        <div class="input-group"><label for="note-input">Note</label><textarea id="note-input" placeholder="Type your note... (Press Enter or Return to add)" enterkeyhint="send" rows="3"></textarea></div>
+      </div>
       <div class="modal-actions">
         <button id="btn-cancel-note" class="btn-secondary">Cancel</button>
         <button id="btn-save-note" class="btn-primary">Add Note</button>
@@ -1125,34 +1138,36 @@
         <h3 id="detail-modal-title">Log Violation</h3>
         <p id="detail-modal-subtitle" class="subtitle" style="margin-bottom:0;">Add notes or adjust time</p>
       </header>
-      <div class="input-group-row">
-        <div class="input-group"><label for="detail-time-input">Time</label><input type="text" id="detail-time-input" readonly class="clickable-input" /></div>
-      </div>
-      <div id="multiple-minutes-options" style="display:none; margin-bottom:1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
-        <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;margin-bottom:0.5rem;"><input type="checkbox" id="check-multiple-minutes" style="width:1.2rem;height:1.2rem;"> <span>Multiple Minutes?</span></label>
-        <div id="end-time-group" class="input-group" style="display:none;"><label for="detail-end-time-input">End Time</label><input type="text" id="detail-end-time-input" readonly class="clickable-input" placeholder="Select end time" /></div>
-      </div>
-      <div id="skipped-stop-options" class="input-group" style="display:none; margin-bottom:1rem;">
-        <label for="detail-stop-num-input">Stop #</label>
-        <input type="text" id="detail-stop-num-input" placeholder='e.g. "4" or "#4" (auto-adds Stop)' />
-      </div>
-      <div id="bus-dispatch-options" class="input-group-row" style="display:none;gap:1rem;margin-bottom:1rem;">
-        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="check-late" style="width:1.2rem;height:1.2rem;"> <span>Late</span></label>
-        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="check-no-input" style="width:1.2rem;height:1.2rem;"> <span>Didn't Input</span></label>
-      </div>
-      <div class="input-group"><label for="detail-notes-input" id="detail-notes-label">Notes (Optional)</label><textarea id="detail-notes-input" placeholder="Type here..." rows="2"></textarea></div>
-      <div id="standing-action-options" style="display:none; margin-bottom:1rem;">
-        <div style="font-size:0.75rem; opacity:0.5; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.6rem;">Action Status</div>
-        <div style="display:flex; gap:1rem; margin-bottom:0.5rem;">
-          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="radio-no-action" style="width:1.2rem;height:1.2rem;"> <span>No Action Taken</span></label>
-          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="radio-action-taken" style="width:1.2rem;height:1.2rem;"> <span>Action Taken</span></label>
+      <div class="modal-scrollable-body card-scrollable-body">
+        <div class="input-group-row">
+          <div class="input-group"><label for="detail-time-input">Time</label><input type="text" id="detail-time-input" readonly class="clickable-input" /></div>
         </div>
-        <div id="action-desc-group" style="display:none; margin-bottom:0.5rem;">
-          <div class="input-group"><label for="action-description-input">Describe Action</label><input type="text" id="action-description-input" placeholder="e.g. Told passengers to sit down" /></div>
+        <div id="multiple-minutes-options" style="display:none; margin-bottom:1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;margin-bottom:0.5rem;"><input type="checkbox" id="check-multiple-minutes" style="width:1.2rem;height:1.2rem;"> <span>Multiple Minutes?</span></label>
+          <div id="end-time-group" class="input-group" style="display:none;"><label for="detail-end-time-input">End Time</label><input type="text" id="detail-end-time-input" readonly class="clickable-input" placeholder="Select end time" /></div>
         </div>
-        <div style="font-size:0.75rem; opacity:0.5; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.6rem; margin-top:0.5rem;">Video?</div>
-        <div style="display:flex; gap:1rem;">
-          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="check-has-video" style="width:1.2rem;height:1.2rem;"> <span>Yes</span></label>
+        <div id="skipped-stop-options" class="input-group" style="display:none; margin-bottom:1rem;">
+          <label for="detail-stop-num-input">Stop #</label>
+          <input type="text" id="detail-stop-num-input" placeholder='e.g. "4" or "#4" (auto-adds Stop)' />
+        </div>
+        <div id="bus-dispatch-options" class="input-group-row" style="display:none;gap:1rem;margin-bottom:1rem;">
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="check-late" style="width:1.2rem;height:1.2rem;"> <span>Late</span></label>
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;cursor:pointer;"><input type="checkbox" id="check-no-input" style="width:1.2rem;height:1.2rem;"> <span>Didn't Input</span></label>
+        </div>
+        <div class="input-group"><label for="detail-notes-input" id="detail-notes-label">Notes (Optional)</label><textarea id="detail-notes-input" placeholder="Type here..." rows="2"></textarea></div>
+        <div id="standing-action-options" style="display:none; margin-bottom:1rem;">
+          <div style="font-size:0.75rem; opacity:0.5; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.6rem;">Action Status</div>
+          <div style="display:flex; gap:1rem; margin-bottom:0.5rem;">
+            <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="radio-no-action" style="width:1.2rem;height:1.2rem;"> <span>No Action Taken</span></label>
+            <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="radio-action-taken" style="width:1.2rem;height:1.2rem;"> <span>Action Taken</span></label>
+          </div>
+          <div id="action-desc-group" style="display:none; margin-bottom:0.5rem;">
+            <div class="input-group"><label for="action-description-input">Describe Action</label><input type="text" id="action-description-input" placeholder="e.g. Told passengers to sit down" /></div>
+          </div>
+          <div style="font-size:0.75rem; opacity:0.5; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.6rem; margin-top:0.5rem;">Video?</div>
+          <div style="display:flex; gap:1rem;">
+            <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;cursor:pointer;"><input type="checkbox" id="check-has-video" style="width:1.2rem;height:1.2rem;"> <span>Yes</span></label>
+          </div>
         </div>
       </div>
       <div class="modal-actions">
@@ -1166,7 +1181,7 @@
   <div id="edit-session-modal" class="modal-overlay">
     <div class="modal card">
       <header class="modal-header"><h3>Edit Session Details</h3></header>
-      <div id="edit-session-fields"></div>
+      <div id="edit-session-fields" class="modal-scrollable-body card-scrollable-body"></div>
       <div class="modal-actions">
         <button id="btn-cancel-edit-session" class="btn-secondary">Cancel</button>
         <button id="btn-save-edit-session" class="btn-primary">Update Details</button>
@@ -1178,7 +1193,9 @@
   <div id="driver-change-modal" class="modal-overlay">
     <div class="modal card">
       <header class="modal-header"><h3>Change Driver</h3><p class="subtitle" style="margin-bottom:0;">Enter the new driver's name</p></header>
-      <div class="input-group"><label for="new-driver-input">Driver Name</label><input type="text" id="new-driver-input" placeholder="Enter driver name" /></div>
+      <div class="modal-scrollable-body card-scrollable-body">
+        <div class="input-group"><label for="new-driver-input">Driver Name</label><input type="text" id="new-driver-input" placeholder="Enter driver name" /></div>
+      </div>
       <div class="modal-actions">
         <button id="btn-cancel-driver-change" class="btn-secondary">Cancel</button>
         <button id="btn-save-driver-change" class="btn-primary">Save</button>

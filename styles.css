@@ -69,10 +69,19 @@ html, body {
   padding: 1.5rem;
   padding-top: max(2.5rem, env(safe-area-inset-top));
   padding-bottom: max(4rem, env(safe-area-inset-bottom));
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+  touch-action: pan-y !important;
   justify-content: flex-start !important; /* Ensure top headers are always reachable at the top */
   align-items: center; /* Center content horizontally */
   background: var(--bg-primary); /* Ensure no transparency issues */
+}
+
+.view:not(.modal-screen-view):not(.ring-view) > .container,
+.view:not(.modal-screen-view):not(.ring-view) > .login-shell {
+  flex-shrink: 0 !important;
 }
 
 #login-view.active, #menu-view.active {
@@ -91,7 +100,7 @@ html, body {
 }
 
 /* === MODAL SCREEN VIEWS (Menus & Pre-Report Setup Cards) === */
-/* Centered on mobile & desktop, screen cannot move or bounce */
+/* Centered on mobile & desktop, card stays fixed while inner body scrolls */
 .view.modal-screen-view,
 #fl-new-view.active,
 #sw-new-view.active,
@@ -106,14 +115,13 @@ html, body {
   align-items: center !important;
   overflow: hidden !important;
   padding: 1rem max(1rem, env(safe-area-inset-right)) 1rem max(1rem, env(safe-area-inset-left)) !important;
-  touch-action: none !important; /* Disallow screen-dragging on background */
 }
 
 /* Centered Setup / Menu Modal Card */
 .setup-modal-card {
   display: flex !important;
   flex-direction: column !important;
-  max-height: min(88dvh, 620px) !important;
+  max-height: min(88dvh, 640px) !important;
   width: 100% !important;
   max-width: 420px !important;
   margin: auto !important;
@@ -134,8 +142,9 @@ html, body {
   width: 100% !important;
 }
 
-/* Scrollable Body: only this area scrolls, strictly contained within the card */
-.card-scrollable-body {
+/* Scrollable Body: only this area scrolls, strictly contained within the card, scrollbars hidden */
+.card-scrollable-body,
+.modal-scrollable-body {
   flex: 1 1 auto !important;
   min-height: 0 !important;
   overflow-y: auto !important;
@@ -144,23 +153,16 @@ html, body {
   overscroll-behavior-y: contain !important;
   -webkit-overflow-scrolling: touch !important;
   touch-action: pan-y !important;
-  padding-right: 6px !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
   margin-bottom: 0.5rem !important;
 }
 
-/* Sleek monotone scrollbar */
-.card-scrollable-body::-webkit-scrollbar {
-  width: 4px;
-}
-.card-scrollable-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-.card-scrollable-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.22);
-  border-radius: 4px;
-}
-.card-scrollable-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+.card-scrollable-body::-webkit-scrollbar,
+.modal-scrollable-body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Pinned Card Footer (e.g. Start Session button) */
@@ -178,18 +180,23 @@ html, body {
   margin: 0 !important;
 }
 
-/* Ergonomic spacing for inputs in setup modal cards */
-.setup-modal-card .input-group {
-  margin-bottom: 1.15rem !important;
+/* Ergonomic spacing for inputs in setup modal cards and modal overlays */
+.setup-modal-card .input-group,
+.modal.card .input-group {
+  margin-bottom: 1.1rem !important;
 }
-.setup-modal-card .input-group:last-child {
-  margin-bottom: 0.5rem !important;
+.setup-modal-card .input-group:last-child,
+.modal.card .input-group:last-child {
+  margin-bottom: 0.4rem !important;
 }
-.setup-modal-card .input-group label {
+.setup-modal-card .input-group label,
+.modal.card .input-group label {
   margin-bottom: 0.4rem !important;
   font-size: 0.72rem !important;
 }
-.setup-modal-card .input-group input {
+.setup-modal-card .input-group input,
+.modal.card .input-group input,
+.modal.card .input-group textarea {
   padding: 0.75rem 0.9rem !important;
   font-size: 0.9rem !important;
 }
@@ -388,9 +395,102 @@ button:active { transform: scale(.92) !important; background: rgba(255,255,255,0
 .log-item .time { color: var(--text-tertiary); font-family: monospace; }
 .sync-status { color: var(--green); font-size: .7rem; }
 
-/* === REPORTS === */
+/* === REPORTS & FOLDERS === */
 .log-section { border-radius: var(--radius-md); background: #141414; background: rgba(24,24,24,0.95); flex-grow: 1; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); }
-.folder-header { display: flex; align-items: center; gap: .75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .1em; font-size: .85rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; padding-bottom: .75rem; }
+.folder-header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .1em; font-size: .85rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; padding-bottom: .75rem; flex-wrap: wrap; }
+.folder-header-left { display: flex; align-items: center; gap: .6rem; min-width: 0; }
+.folder-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: rgba(46, 204, 113, 0.14);
+  color: var(--green);
+  border: 1px solid rgba(46, 204, 113, 0.35);
+  border-radius: 8px;
+  padding: .35rem .65rem;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.folder-back-btn:hover { background: rgba(46, 204, 113, 0.24); }
+.folder-count-badge {
+  background: rgba(46, 204, 113, 0.14);
+  color: var(--green);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 999px;
+  padding: .2rem .6rem;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.report-folder-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .85rem;
+  padding: .95rem 1rem;
+  margin-bottom: .65rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+  animation: slideUpFade .35s cubic-bezier(0.25,1,0.5,1) forwards;
+}
+.report-folder-item:hover, .report-folder-item:active {
+  background: rgba(46, 204, 113, 0.08);
+  border-color: rgba(46, 204, 113, 0.35);
+  transform: translateY(-1px);
+}
+.report-folder-left {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  min-width: 0;
+}
+.report-folder-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(46, 204, 113, 0.14);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.report-folder-info {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  min-width: 0;
+}
+.report-folder-title {
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.report-folder-sub {
+  font-size: .74rem;
+  color: var(--text-tertiary);
+}
+.report-folder-right {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-shrink: 0;
+}
 
 /* === ICON BUTTONS === */
 .icon-tool-btn { width: 30px; height: 30px; color: var(--text-primary); cursor: pointer; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; display: flex; justify-content: center; align-items: center; padding: 0; }
@@ -413,9 +513,8 @@ button:active { transform: scale(.92) !important; background: rgba(255,255,255,0
   background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
   justify-content: center; align-items: center;
   opacity: 0; transition: opacity var(--trans-modal);
-  touch-action: none;
-  overscroll-behavior: none;
-  padding: 1rem max(1rem, env(safe-area-inset-right)) 1rem max(1rem, env(safe-area-inset-left));
+  overscroll-behavior: contain;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 .modal-overlay.active { display: flex; opacity: 1; }
 @keyframes modalPop {
@@ -428,8 +527,8 @@ button:active { transform: scale(.92) !important; background: rgba(255,255,255,0
   background: rgba(24, 24, 24, 0.98);
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
-  padding: 1.5rem 1.25rem;
-  max-height: min(88dvh, 600px);
+  padding: 1.35rem 1.25rem;
+  max-height: min(88dvh, 640px);
   width: 92%;
   max-width: 420px;
   display: flex;
@@ -439,8 +538,16 @@ button:active { transform: scale(.92) !important; background: rgba(255,255,255,0
   border-radius: 18px;
 }
 .modal-overlay.active .modal.card { transform: scale(1); animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-.modal-header { text-align: center; margin-bottom: 1.25rem; flex-shrink: 0; }
-.modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; flex-shrink: 0; }
+.modal-header { text-align: center; margin-bottom: 1rem; flex-shrink: 0; }
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
 
 /* === TIME PICKER (Scroll Dial) === */
 .time-picker-card { max-width: 320px !important; }

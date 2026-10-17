@@ -90,6 +90,42 @@ def print_banner():
 
 def prompt_port():
     default_port = 8080
+
+    # 1. Check CLI arguments (e.g. start_server.py 3223 or --port 3223)
+    for i, arg in enumerate(sys.argv[1:], 1):
+        if arg in ('--port', '-p') and i < len(sys.argv) - 1:
+            val = sys.argv[i + 1]
+            if val.isdigit() and 1000 <= int(val) <= 65535:
+                port = int(val)
+                if is_port_in_use(port):
+                    kill_port(port)
+                return port
+        if arg.startswith('--port='):
+            val = arg.split('=', 1)[1]
+            if val.isdigit() and 1000 <= int(val) <= 65535:
+                port = int(val)
+                if is_port_in_use(port):
+                    kill_port(port)
+                return port
+        if arg.isdigit() and 1000 <= int(arg) <= 65535:
+            port = int(arg)
+            if is_port_in_use(port):
+                kill_port(port)
+            return port
+
+    # 2. Check PORT environment variable
+    if 'PORT' in os.environ and os.environ['PORT'].isdigit():
+        port = int(os.environ['PORT'])
+        if is_port_in_use(port):
+            kill_port(port)
+        return port
+
+    # 3. If running non-interactively (piped / daemon / background), use default
+    if not sys.stdin.isatty():
+        if is_port_in_use(default_port):
+            kill_port(default_port)
+        return default_port
+
     while True:
         print("\n\033[1mMenu Options:\033[0m")
         print(f"  \033[32m[1]\033[0m Default port (\033[1m{default_port}\033[0m)")
@@ -218,12 +254,22 @@ def main():
         https_thread.start()
 
     # Ask or auto-open in browser
-    try:
-        open_browser = input("Open in default web browser now? (Y/n): ").strip().lower()
-        if open_browser in ("", "y", "yes"):
-            webbrowser.open(url_localhost_http)
-    except (EOFError, KeyboardInterrupt):
-        pass
+    should_open = '--open' in sys.argv or '-o' in sys.argv
+    if should_open:
+        try:
+            if sys.platform == 'darwin':
+                subprocess.Popen(['open', url_localhost_http])
+            else:
+                webbrowser.open(url_localhost_http)
+        except Exception:
+            pass
+    elif sys.stdin.isatty():
+        try:
+            open_browser = input("Open in default web browser now? (Y/n): ").strip().lower()
+            if open_browser in ("", "y", "yes"):
+                webbrowser.open(url_localhost_http)
+        except (EOFError, KeyboardInterrupt):
+            pass
 
     try:
         while True:
